@@ -1,0 +1,120 @@
+{
+  "header": {
+    "picturePath": "me.png",
+    "name": "Jean DUPONT",
+    "title": "Développeur Full Stack",
+    "jobSearchGoal": "Recherche un CDI à partir de janvier 2026",
+    "age": "28 ans",
+    "contact": {
+      "location": "Paris, France",
+      "email": "jean.dupont@example.com",
+      "github": "github.com/jeandupont",
+      "linkedin": "linkedin.com/in/jean-dupont",
+      "phone": "+33 6 12 34 56 78"
+    }
+  },
+  "experiences": [
+    {
+      "role": "Déveloappeur Full Stack",
+      "company": "Tech Solutions SA",
+      "date": "Mars 2023 - Aujourd'hui",
+      "description": "Développement d'applications web pour des clients dans divers secteurs.",
+      "tasks": [
+        "Conception et développement d'APIs REST",
+        "Intégration de solutions frontend React/Next.js",
+        "Optimisation des performances et du SEO"
+      ]
+    },
+    {
+      "role": "Développeur Backend",
+      "company": "StartupXYZ",
+      "date": "Janvier 2021 - Février 2023",
+      "description": "Développement de microservices et architecture cloud.",
+      "tasks": [
+        "Développement de microservices Node.js",
+        "Mise en place de CI/CD avec GitHub Actions",
+        "Migration vers architecture cloud (AWS)"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "title": "E-Commerce Platform",
+      "stack": "Next.js / PostgreSQL / Stripe",
+      "description": "Plateforme e-commerce complète avec gestion de paiements et inventaire."
+    },
+    {
+      "title": "Task Management App",
+      "stack": "React / Node.js / MongoDB",
+      "description": "Application de gestion de tâches collaborative avec temps réel."
+    },
+    {
+      "title": "API Analytics",
+      "stack": "Python / FastAPI / Redis",
+      "description": "API d'analyse de données en temps réel avec cache distribué."
+    }
+  ],
+  "education": [
+    {
+      "degree": "Master Informatique - Spécialité Développement Logiciel",
+      "school": "Université Paris-Saclay",
+      "date": "Sept. 2018 - Juil. 2020",
+      "details": "Major de promotion, spécialisation en architecture logicielle."
+    },
+    {
+      "degree": "Licence Informatique",
+      "school": "Université Paris-Saclay",
+      "date": "Sept. 2015 - Juil. 2018",
+      "details": "Mention Bien."
+    }
+  ],
+  "skills": [
+    "JavaScript",
+    "TypeScript",
+    "Python",
+    "Java",
+    "SQL",
+    "React.js",
+    "Next.js",
+    "Vue.js",
+    "TailwindCSS",
+    "HTML/CSS",
+    "Node.js",
+    "Express",
+    "NestJS",
+    "FastAPI",
+    "PostgreSQL",
+    "MongoDB",
+    "Redis",
+    "MySQL",
+    "Docker",
+    "Kubernetes",
+    "AWS",
+    "CI/CD",
+    "GitHub Actions",
+    "Git",
+    "Jest",
+    "Linux"
+  ],
+  "languages": [
+    {
+      "name": "Français",
+      "level": "Natif"
+    },
+    {
+      "name": "Anglais",
+      "level": "Courant (C1)"
+    },
+    {
+      "name": "Espagnol",
+      "level": "Intermédiaire (B1)"
+    }
+  ],
+  "softSkills": [
+    "Communication",
+    "Travail d'équipe",
+    "Résolution de problèmes",
+    "Autonomie",
+    "Curiosité technique"
+  ]
+}

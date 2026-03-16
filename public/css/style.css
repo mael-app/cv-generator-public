@@ -1,0 +1,207 @@
+:root {
+  --primary: #2563eb;
+  --text-dark: #1e293b;
+  --text-light: #64748b;
+  --bg-base: #f8fafc;
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --dynamic-bg: #2563eb;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  color: var(--text-dark);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(circle at 50% -20%, var(--dynamic-bg), transparent 70%),
+    radial-gradient(circle at 100% 50%, #e2e8f0, transparent 50%),
+    var(--bg-base);
+  background-attachment: fixed;
+  transition: --dynamic-bg 1s ease;
+}
+
+.container {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 3rem;
+  border-radius: 1.5rem;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 480px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+/* Subtle shine effect */
+.container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transform: skewX(-25deg);
+  pointer-events: none;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--text-dark), var(--primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 2rem;
+  letter-spacing: -1px;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--text-light);
+  transition: color 0.3s;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid transparent;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  outline: none;
+  font-family: inherit;
+  color: var(--text-dark);
+}
+
+input:focus,
+select:focus {
+  background: white;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(var(--primary), 0.1);
+}
+
+.btn-primary {
+  width: auto;
+  background: linear-gradient(135deg, var(--primary), #1d4ed8);
+  color: white;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.5);
+  filter: brightness(1.1);
+}
+
+.btn-secondary {
+  padding: 1rem 2rem;
+  color: var(--text-light);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.btn-secondary:hover {
+  color: var(--text-dark);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* History Section */
+#historySection {
+  margin-top: 3rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  padding-top: 1.5rem;
+}
+
+#historySection h3 {
+  font-size: 1rem;
+  color: var(--text-light);
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
+}
+
+#historyList li {
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid transparent;
+  transition: all 0.2s;
+}
+
+#historyList li:hover {
+  background: white;
+  transform: scale(1.02);
+  border-color: rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+/* Color Picker Customization */
+.color-input-wrapper {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+input[type="color"] {
+  -webkit-appearance: none;
+  border: none;
+  padding: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  background: none;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+input[type="color"]::-webkit-color-swatch {
+  border: none;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Smooth placeholder animation */
+::placeholder {
+  color: #94a3b8;
+  opacity: 1;
+}

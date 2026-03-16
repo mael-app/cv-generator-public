@@ -1,0 +1,50 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+*.pdf
+output/
+dist/
+
+# Personal data
+cv.json
+uploads/
+profile.jpeg
+*.jpeg
+*.jpg
+*.png
+!cv.example.json
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Test coverage
+coverage/
+*.lcov
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+audit.log
+
+# System files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Development
+.gemini/
+gha-creds-*.json
+
+# Lock files (optionnel - décommentez si vous ne voulez pas tracker)
+# package-lock.json

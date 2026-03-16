@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CV Generator - Éditeur</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .editor-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+
+        .section {
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, var(--primary), #1d4ed8);
+            color: white;
+            padding: 1rem 1.5rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-header:hover {
+            background: linear-gradient(135deg, #1d4ed8, var(--primary));
+        }
+
+        .section-content {
+            padding: 1.5rem;
+            transition: padding 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.4rem;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            box-sizing: border-box;
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .array-item {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            border: 1px solid #e2e8f0;
+            position: relative;
+        }
+
+        .array-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .array-item-title {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .btn-remove {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-remove:hover {
+            background: #dc2626;
+            transform: scale(1.05);
+        }
+
+        .btn-add {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .btn-add:hover {
+            background: #059669;
+            transform: translateY(-1px);
+        }
+
+        .actions {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .chip-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .chip {
+            background: #e0e7ff;
+            color: #3730a3;
+            padding: 0.4rem 0.8rem;
+            border-radius: 16px;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chip button {
+            background: none;
+            border: none;
+            color: #3730a3;
+            cursor: pointer;
+            font-weight: bold;
+            padding: 0;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .chip button:hover {
+            background: #c7d2fe;
+        }
+
+        .chip-input {
+            margin-top: 0.5rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chip-input input {
+            flex: 1;
+        }
+
+        .chip-input button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .collapsible {
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        .collapsible.collapsed {
+            max-height: 0 !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }
+
+        .toggle-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-icon.collapsed {
+            transform: rotate(-90deg);
+        }
+
+        .photo-upload-container {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 12px;
+            border: 2px dashed #cbd5e1;
+            transition: all 0.3s ease;
+        }
+
+        .photo-upload-container:hover {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+        }
+
+        .photo-preview-wrapper {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .photo-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+        }
+
+        .photo-preview-wrapper:hover .photo-preview {
+            transform: scale(1.05);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .photo-placeholder {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .photo-upload-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .photo-upload-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary), #1d4ed8);
+            color: white !important;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+            width: fit-content;
+        }
+
+        .photo-upload-label span {
+            color: white !important;
+        }
+
+        .photo-upload-label:hover {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.5);
+        }
+
+        .photo-upload-label:active {
+            transform: translateY(0);
+        }
+
+        .photo-upload-hint {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin: 0;
+        }
+
+        .photo-upload-input {
+            display: none;
+        }
+
+        @media (max-width: 640px) {
+            .photo-upload-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .photo-upload-info {
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container editor-container">
+        <h1>Éditeur de CV</h1>
+        <div id="message" style="margin-bottom: 1rem; padding: 1rem; border-radius: 6px; display: none;"></div>
+
+        <!-- Settings Section -->
+        <div class="section">
+            <div class="section-header" onclick="toggleSection('settings')">
+                <span>Paramètres</span>
+                <span class="toggle-icon" id="toggle-settings">▼</span>
+            </div>
+            <div class="section-content collapsible" id="content-settings">
+                <div class="form-group">
+                    <label>Domaine de l'entreprise (pour la couleur)</label>
+                    <input type="text" id="settings.domain" placeholder="ex: google.com">
+                </div>
+                <div class="two-columns">
+                    <div class="form-group">
+                        <label>Couleur forcée</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="color" id="settings.colorPicker"
+                                onchange="document.getElementById('settings.color').value = this.value"
+                                style="width: 50px; padding: 0;">
+                            <input type="text" id="settings.color" placeholder="#000000"
+                                onchange="document.getElementById('settings.colorPicker').value = this.value">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Thème</label>
+                        <select id="settings.theme">
+                            <option value="light">Clair</option>
+                            <option value="dark">Sombre</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Header Section -->
+        <div class="section">
+            <div class="section-header" onclick="toggleSection('header')">
+                <span>En-tête</span>
+                <span class="toggle-icon" id="toggle-header">▼</span>
+            </div>
+            <div class="section-content collapsible" id="content-header">
+                <div class="form-group">
+                    <label>Nom complet</label>
+                    <input type="text" id="header.name" value="<%= data.header.name %>">
+                </div>
+                <div class="form-group">
+                    <label>Titre</label>
+                    <input type="text" id="header.title" value="<%= data.header.title %>">
+                </div>
+                <div class="form-group">
+                    <label>Objectif de recherche</label>
+                    <input type="text" id="header.jobSearchGoal" value="<%= data.header.jobSearchGoal %>">
+                </div>
+                <div class="form-group">
+                    <label>Âge</label>
+                    <input type="text" id="header.age" value="<%= data.header.age %>">
+                </div>
+                <div class="form-group">
+                    <label>Photo de profil</label>
+                    <div class="photo-upload-container">
+                        <div class="photo-preview-wrapper">
+                            <% if (data.header.picturePath) { %>
+                                <img id="photo-preview" class="photo-preview" src="/<%= data.header.picturePath %>"
+                                    alt="Photo de profil">
+                                <% } else { %>
+                                    <div id="photo-placeholder" class="photo-placeholder"></div>
+                                    <img id="photo-preview" class="photo-preview" src="" alt="Photo de profil"
+                                        style="display: none;">
+                                    <% } %>
+                        </div>
+                        <div class="photo-upload-info">
+                            <label for="photo-upload" class="photo-upload-label">
+                                <span>Choisir une photo</span>
+                            </label>
+                            <p class="photo-upload-hint">JPG, PNG ou GIF • Max 5 MB</p>
+                        </div>
+                        <input type="file" id="photo-upload" class="photo-upload-input" accept="image/*">
+                    </div>
+                </div>
+                <div class="two-columns">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="header.contact.email" value="<%= data.header.contact.email %>">
+                    </div>
+                    <div class="form-group">
+                        <label>Téléphone</label>
+                        <input type="text" id="header.contact.phone" value="<%= data.header.contact.phone %>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Localisation</label>
+                    <input type="text" id="header.contact.location" value="<%= data.header.contact.location %>">
+                </div>
+                <div class="two-columns">
+                    <div class="form-group">
+                        <label>GitHub</label>
+                        <input type="text" id="header.contact.github" value="<%= data.header.contact.github %>">
+                    </div>
+                    <div class="form-group">
+                        <label>LinkedIn</label>
+                        <input type="text" id="header.contact.linkedin" value="<%= data.header.contact.linkedin %>">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Experiences Section -->
+        <div class="section">
+            <div class="section-header" onclick="toggleSection('experiences')">
+                <span>Expériences</span>
+                <span class="toggle-icon" id="toggle-experiences">▼</span>
+            </div>
+            <div class="section-content collapsible" id="content-experiences">
+                <div id="experiences-list"></div>
+                <button class="btn-add" onclick="addExperience()">+ Ajouter une expérience</button>
+            </div>
+        </div>
+
+        <!-- Projects Section -->
+        <div class="section">
+            <div class="section-header" onclick="toggleSection('projects')">
+                <span>Projets</span>
+                <span class="toggle-icon" id="toggle-projects">▼</span>
+            </div>
+            <div class="section-content collapsible" id="content-projects">
+                <div id="projects-list"></div>
+                <button class="btn-add" onclick="addProject()">+ Ajouter un projet</button>
+            </div>
+        </div>
+
+        <!-- Education Section -->
+        <div class="section">
+            <div class="section-header" onclick="toggleSection('education')">
+                <span>Formation</span>
+                <span class="toggle-icon" id="toggle-education">▼</span>
+            </div>
+            <div class="section-content collapsible" id="content-education">
+                <div id="education-list"></div>
+                <button class="btn-add" onclick="addEducation()">+ Ajouter une formation</button>
+            </div>
+        </div>
+
+        <!-- Skills Section -->
+        <div class="section">
+            <div class="section-header" onclick="toggleSection('skills')">
+                <span>Compétences techniques</span>
+                <span class="toggle-icon" id="toggle-skills">▼</span>
+            </div>
+            <div class="section-content collapsible" id="content-skills">
+                <div class="chip-container" id="skills-list"></div>
+                <div class="chip-input">
+                    <input type="text" id="skill-input" placeholder="Nouvelle compétence...">
+                    <button onclick="addSkill()">Ajouter</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Languages Section -->
+        <div class="section">
+            <div class="section-header" onclick="toggleSection('languages')">
+                <span>Langues</span>
+                <span class="toggle-icon" id="toggle-languages">▼</span>
+            </div>
+            <div class="section-content collapsible" id="content-languages">
+                <div id="languages-list"></div>
+                <button class="btn-add" onclick="addLanguage()">+ Ajouter une langue</button>
+            </div>
+        </div>
+
+        <!-- Soft Skills Section -->
+        <div class="section">
+            <div class="section-header" onclick="toggleSection('softSkills')">
+                <span>Soft Skills</span>
+                <span class="toggle-icon" id="toggle-softSkills">▼</span>
+            </div>
+            <div class="section-content collapsible" id="content-softSkills">
+                <div class="chip-container" id="softSkills-list"></div>
+                <div class="chip-input">
+                    <input type="text" id="softSkill-input" placeholder="Nouvelle soft skill...">
+                    <button onclick="addSoftSkill()">Ajouter</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <a href="/" class="btn-secondary">Retour</a>
+            <button onclick="generatePDF()" class="btn-primary">Générer PDF</button>
+        </div>
+    </div>
+
+    <script id="cv-data" type="application/json"><%- JSON.stringify(data) %></script>
+    <script>
+        let cvData = JSON.parse(document.getElementById('cv-data').textContent);
+
+        // Toggle section collapse
+        function toggleSection(sectionId) {
+            const content = document.getElementById(`content-${sectionId}`);
+            const icon = document.getElementById(`toggle-${sectionId}`);
+
+            if (content.classList.contains('collapsed')) {
+                // Expand
+                content.classList.remove('collapsed');
+                content.style.maxHeight = content.scrollHeight + 'px';
+                icon.classList.remove('collapsed');
+            } else {
+                // Collapse
+                content.style.maxHeight = content.scrollHeight + 'px';
+                // Use requestAnimationFrame to ensure the browser applies the current height first
+                requestAnimationFrame(() => {
+                    content.style.maxHeight = '0px';
+                    content.classList.add('collapsed');
+                    icon.classList.add('collapsed');
+                });
+            }
+        }
+
+        // Initialize all sections
+        function init() {
+            renderExperiences();
+            renderProjects();
+            renderEducation();
+            renderSkills();
+            renderLanguages();
+            renderSoftSkills();
+            attachInputListeners();
+            attachPhotoUploadListener();
+            initializeSectionHeights();
+        }
+
+        // Set initial max-heights for all non-collapsed sections
+        function initializeSectionHeights() {
+            // Use setTimeout to ensure DOM is fully rendered with content
+            setTimeout(() => {
+                document.querySelectorAll('.collapsible:not(.collapsed)').forEach(section => {
+                    section.style.maxHeight = section.scrollHeight + 'px';
+                });
+            }, 0);
+        }
+
+        // Update height of a specific section after content changes
+        function updateSectionHeight(sectionId) {
+            const content = document.getElementById(`content-${sectionId}`);
+            if (content && !content.classList.contains('collapsed')) {
+                // Use setTimeout to recalculate after DOM updates
+                setTimeout(() => {
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                }, 0);
+            }
+        }
+
+        // Photo upload handler
+        function attachPhotoUploadListener() {
+            const photoInput = document.getElementById('photo-upload');
+            const photoPreview = document.getElementById('photo-preview');
+            const photoPlaceholder = document.getElementById('photo-placeholder');
+
+            photoInput.addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                // Show preview immediately
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    photoPreview.src = e.target.result;
+                    photoPreview.style.display = 'block';
+                    if (photoPlaceholder) {
+                        photoPlaceholder.style.display = 'none';
+                    }
+                };
+                reader.readAsDataURL(file);
+
+                // Upload to server
+                const formData = new FormData();
+                formData.append('photo', file);
+
+                try {
+                    const response = await fetch('/api/upload-photo', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.json();
+                    if (result.success) {
+                        cvData.header.picturePath = result.path;
+                        showMessage('Photo uploadée avec succès !', 'success');
+                    } else {
+                        showMessage('Erreur lors de l\'upload: ' + result.error, 'error');
+                    }
+                } catch (error) {
+                    showMessage('Erreur réseau: ' + error.message, 'error');
+                }
+            });
+        }
+
+        // Attach listeners to simple inputs
+        function attachInputListeners() {
+            document.querySelectorAll('input[id^="header"]').forEach(input => {
+                input.addEventListener('input', (e) => {
+                    const path = e.target.id.split('.');
+                    let current = cvData;
+                    for (let i = 0; i < path.length - 1; i++) {
+                        current = current[path[i]];
+                    }
+                    current[path[path.length - 1]] = e.target.value;
+                });
+            });
+        }
+
+        // === EXPERIENCES ===
+        function renderExperiences() {
+            const container = document.getElementById('experiences-list');
+            container.innerHTML = cvData.experiences.map((exp, index) => `
+                <div class="array-item">
+                    <div class="array-item-header">
+                        <span class="array-item-title">Expérience ${index + 1}</span>
+                        <button class="btn-remove" onclick="removeExperience(${index})">Supprimer</button>
+                    </div>
+                    <div class="form-group">
+                        <label>Poste</label>
+                        <input type="text" value="${exp.role}" onchange="updateExperience(${index}, 'role', this.value)">
+                    </div>
+                    <div class="two-columns">
+                        <div class="form-group">
+                            <label>Entreprise</label>
+                            <input type="text" value="${exp.company}" onchange="updateExperience(${index}, 'company', this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label>Période</label>
+                            <input type="text" value="${exp.date}" onchange="updateExperience(${index}, 'date', this.value)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea onchange="updateExperience(${index}, 'description', this.value)">${exp.description}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Tâches</label>
+                        <div class="chip-container">
+                            ${exp.tasks.map((task, taskIndex) => `
+                                <div class="chip">
+                                    ${task}
+                                    <button onclick="removeTask(${index}, ${taskIndex})">×</button>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="chip-input">
+                            <input type="text" id="task-input-${index}" placeholder="Nouvelle tâche...">
+                            <button onclick="addTask(${index})">Ajouter</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            updateSectionHeight('experiences');
+        }
+
+        function addExperience() {
+            cvData.experiences.push({
+                role: '',
+                company: '',
+                date: '',
+                description: '',
+                tasks: []
+            });
+            renderExperiences();
+        }
+
+        function removeExperience(index) {
+            cvData.experiences.splice(index, 1);
+            renderExperiences();
+        }
+
+        function updateExperience(index, field, value) {
+            cvData.experiences[index][field] = value;
+        }
+
+        function addTask(expIndex) {
+            const input = document.getElementById(`task-input-${expIndex}`);
+            if (input.value.trim()) {
+                cvData.experiences[expIndex].tasks.push(input.value.trim());
+                input.value = '';
+                renderExperiences();
+            }
+        }
+
+        function removeTask(expIndex, taskIndex) {
+            cvData.experiences[expIndex].tasks.splice(taskIndex, 1);
+            renderExperiences();
+        }
+
+        // === PROJECTS ===
+        function renderProjects() {
+            const container = document.getElementById('projects-list');
+            container.innerHTML = cvData.projects.map((project, index) => `
+                <div class="array-item">
+                    <div class="array-item-header">
+                        <span class="array-item-title">Projet ${index + 1}</span>
+                        <button class="btn-remove" onclick="removeProject(${index})">Supprimer</button>
+                    </div>
+                    <div class="form-group">
+                        <label>Titre</label>
+                        <input type="text" value="${project.title}" onchange="updateProject(${index}, 'title', this.value)">
+                    </div>
+                    <div class="form-group">
+                        <label>Stack technique</label>
+                        <input type="text" value="${project.stack}" onchange="updateProject(${index}, 'stack', this.value)">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea onchange="updateProject(${index}, 'description', this.value)">${project.description}</textarea>
+                    </div>
+                </div>
+            `).join('');
+            updateSectionHeight('projects');
+        }
+
+        function addProject() {
+            cvData.projects.push({
+                title: '',
+                stack: '',
+                description: ''
+            });
+            renderProjects();
+        }
+
+        function removeProject(index) {
+            cvData.projects.splice(index, 1);
+            renderProjects();
+        }
+
+        function updateProject(index, field, value) {
+            cvData.projects[index][field] = value;
+        }
+
+        // === EDUCATION ===
+        function renderEducation() {
+            const container = document.getElementById('education-list');
+            container.innerHTML = cvData.education.map((edu, index) => `
+                <div class="array-item">
+                    <div class="array-item-header">
+                        <span class="array-item-title">Formation ${index + 1}</span>
+                        <button class="btn-remove" onclick="removeEducation(${index})">Supprimer</button>
+                    </div>
+                    <div class="form-group">
+                        <label>Diplôme</label>
+                        <input type="text" value="${edu.degree}" onchange="updateEducation(${index}, 'degree', this.value)">
+                    </div>
+                    <div class="two-columns">
+                        <div class="form-group">
+                            <label>École</label>
+                            <input type="text" value="${edu.school}" onchange="updateEducation(${index}, 'school', this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label>Période</label>
+                            <input type="text" value="${edu.date}" onchange="updateEducation(${index}, 'date', this.value)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Détails</label>
+                        <textarea onchange="updateEducation(${index}, 'details', this.value)">${edu.details}</textarea>
+                    </div>
+                </div>
+            `).join('');
+            updateSectionHeight('education');
+        }
+
+        function addEducation() {
+            cvData.education.push({
+                degree: '',
+                school: '',
+                date: '',
+                details: ''
+            });
+            renderEducation();
+        }
+
+        function removeEducation(index) {
+            cvData.education.splice(index, 1);
+            renderEducation();
+        }
+
+        function updateEducation(index, field, value) {
+            cvData.education[index][field] = value;
+        }
+
+        // === SKILLS ===
+        function renderSkills() {
+            const container = document.getElementById('skills-list');
+            container.innerHTML = cvData.skills.map((skill, index) => `
+                <div class="chip">
+                    ${skill}
+                    <button onclick="removeSkill(${index})">×</button>
+                </div>
+            `).join('');
+            updateSectionHeight('skills');
+        }
+
+        function addSkill() {
+            const input = document.getElementById('skill-input');
+            if (input.value.trim()) {
+                cvData.skills.push(input.value.trim());
+                input.value = '';
+                renderSkills();
+            }
+        }
+
+        function removeSkill(index) {
+            cvData.skills.splice(index, 1);
+            renderSkills();
+        }
+
+        // === LANGUAGES ===
+        function renderLanguages() {
+            const container = document.getElementById('languages-list');
+            container.innerHTML = cvData.languages.map((lang, index) => `
+                <div class="array-item">
+                    <div class="array-item-header">
+                        <span class="array-item-title">Langue ${index + 1}</span>
+                        <button class="btn-remove" onclick="removeLanguage(${index})">Supprimer</button>
+                    </div>
+                    <div class="two-columns">
+                        <div class="form-group">
+                            <label>Langue</label>
+                            <input type="text" value="${lang.name}" onchange="updateLanguage(${index}, 'name', this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label>Niveau</label>
+                            <input type="text" value="${lang.level}" onchange="updateLanguage(${index}, 'level', this.value)">
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            updateSectionHeight('languages');
+        }
+
+        function addLanguage() {
+            cvData.languages.push({
+                name: '',
+                level: ''
+            });
+            renderLanguages();
+        }
+
+        function removeLanguage(index) {
+            cvData.languages.splice(index, 1);
+            renderLanguages();
+        }
+
+        function updateLanguage(index, field, value) {
+            cvData.languages[index][field] = value;
+        }
+
+        // === SOFT SKILLS ===
+        function renderSoftSkills() {
+            const container = document.getElementById('softSkills-list');
+            container.innerHTML = cvData.softSkills.map((skill, index) => `
+                <div class="chip">
+                    ${skill}
+                    <button onclick="removeSoftSkill(${index})">×</button>
+                </div>
+            `).join('');
+            updateSectionHeight('softSkills');
+        }
+
+        function addSoftSkill() {
+            const input = document.getElementById('softSkill-input');
+            if (input.value.trim()) {
+                cvData.softSkills.push(input.value.trim());
+                input.value = '';
+                renderSoftSkills();
+            }
+        }
+
+        function removeSoftSkill(index) {
+            cvData.softSkills.splice(index, 1);
+            renderSoftSkills();
+        }
+
+        // === PDF GENERATION ===
+        async function generatePDF() {
+            try {
+                const btn = document.querySelector('button[onclick="generatePDF()"]');
+                const originalText = btn.innerText;
+                btn.innerText = 'Génération en cours...';
+                btn.disabled = true;
+
+                const domain = document.getElementById('settings.domain').value;
+                const color = document.getElementById('settings.color').value;
+                const theme = document.getElementById('settings.theme').value;
+
+                const payload = {
+                    cv: cvData,
+                    settings: {
+                        domain: domain,
+                        color: color
+                    }
+                };
+
+                const res = await fetch(`/generate-cv?theme=${theme}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (res.ok) {
+                    const blob = await res.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    window.open(url, '_blank');
+                    showMessage('PDF généré avec succès!', 'success');
+                } else {
+                    showMessage('Erreur: ' + await res.text(), 'error');
+                }
+
+                btn.innerText = originalText;
+                btn.disabled = false;
+            } catch (e) {
+                showMessage('Erreur réseau: ' + e.message, 'error');
+                const btn = document.querySelector('button[onclick="generatePDF()"]');
+                if (btn) btn.disabled = false;
+            }
+        }
+
+        function showMessage(text, type) {
+            const msg = document.getElementById('message');
+            msg.textContent = text;
+            msg.style.display = 'block';
+            msg.style.background = type === 'success' ? '#d1fae5' : '#fee2e2';
+            msg.style.color = type === 'success' ? '#065f46' : '#991b1b';
+            setTimeout(() => {
+                msg.style.display = 'none';
+            }, 3000);
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>

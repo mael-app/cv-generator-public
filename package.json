@@ -1,0 +1,72 @@
+{
+  "name": "cv-generator",
+  "version": "1.0.0",
+  "description": "Generate a professionally styled CV/Resume PDF with dynamic brand color extraction from company logos.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "start": "nodemon --exec ts-node --files src/server.ts",
+    "build": "tsc",
+    "create": "node scripts/generate-cv.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "typecheck": "tsc --noEmit",
+    "prepare": "husky"
+  },
+  "keywords": [
+    "cv",
+    "resume",
+    "pdf",
+    "generator",
+    "puppeteer"
+  ],
+  "author": "",
+  "license": "MIT",
+  "lint-staged": {
+    "*.{ts,js}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,css,html}": [
+      "prettier --write"
+    ]
+  },
+  "dependencies": {
+    "axios": "^1.13.2",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "get-image-colors": "^4.0.1",
+    "multer": "^2.0.2",
+    "puppeteer": "^24.31.0",
+    "zod": "^4.1.13"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^20.5.0",
+    "@commitlint/config-conventional": "^20.5.0",
+    "@types/ejs": "^3.1.5",
+    "@types/express": "^5.0.5",
+    "@types/jest": "^30.0.0",
+    "@types/multer": "^2.0.0",
+    "@types/node": "^24.10.1",
+    "@typescript-eslint/eslint-plugin": "^8.49.0",
+    "@typescript-eslint/parser": "^8.49.0",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "globals": "^16.5.0",
+    "husky": "^9.1.7",
+    "jest": "^30.2.0",
+    "lint-staged": "^16.4.0",
+    "nodemon": "^3.1.11",
+    "prettier": "^3.7.4",
+    "ts-jest": "^29.4.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.49.0"
+  },
+  "overrides": {
+    "form-data": "^4.0.0",
+    "tough-cookie": "^4.1.3"
+  }
+}
