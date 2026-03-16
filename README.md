@@ -9,7 +9,7 @@ Generate a professionally styled CV/Resume PDF with **dynamic brand color extrac
 ## Features
 
 - **Dashboard editor** — fill in all CV sections directly in the browser
-- **Brand color extraction** from company logos (Clearbit → Google favicon → fallback)
+- **Brand color extraction** from company logos (Google favicon → fallback)
 - **PDF generation** via Puppeteer (A4, print-optimized)
 - Profile photo upload (JPEG / PNG / GIF, max 5 MB)
 - Light / dark PDF theme
@@ -32,15 +32,11 @@ Open **http://localhost:3000**, fill in your details, and click **Generate PDF**
 Generate PDFs programmatically — no auth required.
 
 ```bash
-# Step 1 — Generate (returns a one-time download URL)
-RESPONSE=$(curl -s -X POST http://localhost:3000/api/generate \
+curl -X POST http://localhost:3000/api/generate \
   -F "cv=<cv-data.json" \
   -F "photo=@photo.jpg" \
   -F "domain=apple.com" \
-  -F "theme=light")
-
-# Step 2 — Download the PDF (link expires in 5 min, single use)
-curl -s "http://localhost:3000$(echo $RESPONSE | jq -r '.downloadUrl')" \
+  -F "theme=light" \
   -o cv.pdf
 ```
 
@@ -52,9 +48,7 @@ curl -s "http://localhost:3000$(echo $RESPONSE | jq -r '.downloadUrl')" \
 | `color`   | Hex color override, takes precedence over domain — optional             |
 | `theme`   | `light` or `dark` — default: `light`                                    |
 
-The `POST /api/generate` response: `{ "downloadUrl": "/api/download/<token>", "expiresIn": 300 }`
-
-The download link is **single-use** and expires after **5 minutes**.
+`POST /api/generate` returns the PDF binary directly (`application/pdf`). On error, returns JSON with an `error` field.
 
 ## Docker
 
@@ -76,7 +70,7 @@ docker run -p 3000:3000 cv-generator-public
 ## Tech stack
 
 - **Framework:** Next.js 15 (App Router), React 19, TypeScript
-- **PDF:** Puppeteer (headless Chrome), EJS templating
+- **PDF:** Puppeteer / @sparticuz/chromium (headless Chrome, serverless-compatible), EJS templating
 - **UI:** Tailwind CSS, shadcn/ui, next-themes
 - **Validation:** Zod
 - **Color extraction:** get-image-colors

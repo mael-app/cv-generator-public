@@ -26,38 +26,13 @@ interface ColorMetric {
 export class ColorService {
   public static async findBrandColor(domain: string): Promise<string> {
     try {
-      // 1. Try Clearbit
-      try {
-        logger.debug("Trying Clearbit for brand color");
-        const buffer = await fetchWithTimeout(
-          `https://logo.clearbit.com/${domain}`,
-          2000,
-        );
-        return await this.extractColorFromBuffer(buffer, "image/png");
-      } catch (error) {
-        logger.warn(
-          { err: error },
-          "Clearbit failed, falling back to Google Favicon",
-        );
-      }
-
-      // 2. Try Google Favicon
-      try {
-        const buffer = await fetchWithTimeout(
-          `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
-          2000,
-        );
-        return await this.extractColorFromBuffer(buffer, "image/png");
-      } catch (error) {
-        logger.warn(
-          { err: error },
-          "Google Favicon failed, using default color",
-        );
-      }
-
-      return "#005eb8"; // Ultimate fallback
+      const buffer = await fetchWithTimeout(
+        `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
+        2000,
+      );
+      return await this.extractColorFromBuffer(buffer, "image/png");
     } catch (error) {
-      logger.error({ err: error }, "ColorService unexpected error");
+      logger.warn({ err: error }, "Google Favicon failed, using default color");
       return "#005eb8";
     }
   }
