@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { Navbar } from "@/components/layout/Navbar";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -49,8 +51,24 @@ export default function RootLayout({
             >
               Source code
             </a>
+            <span className="mx-2 text-muted-foreground/40">·</span>
+            <a
+              href="/privacy"
+              className="hover:text-foreground hover:underline transition-colors"
+            >
+              Privacy
+            </a>
+            <span className="mx-2 text-muted-foreground/40">·</span>
+            <a
+              href="/legal"
+              className="hover:text-foreground hover:underline transition-colors"
+            >
+              Legal
+            </a>
           </footer>
         </ThemeProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

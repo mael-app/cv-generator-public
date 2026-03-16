@@ -5,6 +5,7 @@ import { ColorService } from "@/lib/color/color.service";
 import { renderCV } from "@/lib/pdf/renderer";
 import { BrowserService } from "@/lib/pdf/browser";
 import { TokenStore } from "@/lib/tokens/token.store";
+import logger from "@/lib/logger";
 
 export const runtime = "nodejs";
 
@@ -81,7 +82,7 @@ export async function POST(request: NextRequest) {
       expiresIn: 300,
     });
   } catch (error) {
-    console.error("Generation error:", error);
+    logger.error({ err: error }, "CV generation failed");
     return NextResponse.json({ error: "Error generating CV" }, { status: 500 });
   }
 }

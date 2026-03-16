@@ -1,4 +1,5 @@
 import getColors from "get-image-colors";
+import logger from "@/lib/logger";
 
 async function fetchWithTimeout(
   url: string,
@@ -27,15 +28,17 @@ export class ColorService {
     try {
       // 1. Try Clearbit
       try {
-        console.log(`   🔎 Trying Clearbit...`);
+        logger.debug("Trying Clearbit for brand color");
         const buffer = await fetchWithTimeout(
           `https://logo.clearbit.com/${domain}`,
           2000,
         );
         return await this.extractColorFromBuffer(buffer, "image/png");
       } catch (error) {
-        const errorMsg = error instanceof Error ? error.message : String(error);
-        console.log(`   ⚠️  Clearbit failed (${errorMsg}), trying Google...`);
+        logger.warn(
+          { err: error },
+          "Clearbit failed, falling back to Google Favicon",
+        );
       }
 
       // 2. Try Google Favicon
@@ -46,13 +49,15 @@ export class ColorService {
         );
         return await this.extractColorFromBuffer(buffer, "image/png");
       } catch (error) {
-        const errorMsg = error instanceof Error ? error.message : String(error);
-        console.log(`   ⚠️  Google failed (${errorMsg}).`);
+        logger.warn(
+          { err: error },
+          "Google Favicon failed, using default color",
+        );
       }
 
       return "#005eb8"; // Ultimate fallback
     } catch (error) {
-      console.error("❌ ColorService error:", error);
+      logger.error({ err: error }, "ColorService unexpected error");
       return "#005eb8";
     }
   }
@@ -69,7 +74,10 @@ export class ColorService {
         return { hex: c.hex(), saturation: s, luminance: l };
       });
 
-      console.log("   🎨 Palette found:", metrics.map((m) => m.hex).join(", "));
+      logger.debug(
+        { palette: metrics.map((m) => m.hex) },
+        "Color palette extracted",
+      );
 
       const bestColor = metrics.find((c: ColorMetric) => {
         const isNotWhite = c.luminance < 0.95;
@@ -78,19 +86,18 @@ export class ColorService {
       });
 
       if (bestColor) {
-        console.log(`   ✅ Color selected: ${bestColor.hex}`);
+        logger.debug({ color: bestColor.hex }, "Brand color selected");
         return bestColor.hex;
       } else {
-        console.log(
-          "   No valid color after filtering (too white/black/grey).",
+        logger.debug(
+          "No valid color after filtering (too white/black/grey), using first",
         );
       }
 
       // If no color passes filter, return the first one that isn't pure white
       return metrics[0]?.hex || "#005eb8";
     } catch (e: unknown) {
-      const message = e instanceof Error ? e.message : "Unknown error";
-      console.log("   Error extracting color from image:", message);
+      logger.warn({ err: e }, "Error extracting color from image");
       return "#005eb8";
     }
   }
