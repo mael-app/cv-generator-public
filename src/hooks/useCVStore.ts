@@ -4,7 +4,8 @@ import { useState, useEffect, useCallback } from "react";
 import { CVData } from "@/lib/schemas/cv.schema";
 import { getLocalStorage, setLocalStorage } from "@/lib/storage/local-storage";
 
-export type { CVLanguage } from "@/lib/pdf/renderer";
+import type { CVLanguage } from "@/lib/pdf/renderer";
+export type { CVLanguage };
 
 export interface CVSettings {
   domain: string;
