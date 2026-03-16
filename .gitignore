@@ -1,5 +1,6 @@
 # Dependencies
 node_modules/
+.next/
 
 # Build outputs
 *.pdf
@@ -45,6 +46,3 @@ Thumbs.db
 # Development
 .gemini/
 gha-creds-*.json
-
-# Lock files (optionnel - décommentez si vous ne voulez pas tracker)
-# package-lock.json

@@ -1,0 +1,138 @@
+"use client";
+
+import { ExperienceData } from "@/lib/schemas/cv.schema";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { ArrayItemCard } from "./ArrayItemCard";
+import { Plus, X } from "lucide-react";
+
+interface Props {
+  experiences: ExperienceData[];
+  onChange: (experiences: ExperienceData[]) => void;
+}
+
+const newExp = (): ExperienceData => ({
+  role: "",
+  company: "",
+  date: "",
+  description: "",
+  tasks: [""],
+});
+
+export function ExperiencesSection({ experiences, onChange }: Props) {
+  const update = (
+    index: number,
+    field: keyof ExperienceData,
+    value: string | string[],
+  ) => {
+    const next = experiences.map((e, i) =>
+      i === index ? { ...e, [field]: value } : e,
+    );
+    onChange(next);
+  };
+
+  return (
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <CardTitle>Work Experience</CardTitle>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => onChange([...experiences, newExp()])}
+        >
+          <Plus className="h-4 w-4 mr-1" /> Add
+        </Button>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        {experiences.length === 0 && (
+          <p className="text-sm text-muted-foreground text-center py-4">
+            No experiences yet
+          </p>
+        )}
+        {experiences.map((exp, i) => (
+          <ArrayItemCard
+            key={i}
+            title={exp.role || exp.company || `Experience ${i + 1}`}
+            onDelete={() => onChange(experiences.filter((_, j) => j !== i))}
+          >
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label>Role</Label>
+                <Input
+                  value={exp.role}
+                  onChange={(e) => update(i, "role", e.target.value)}
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Company</Label>
+                <Input
+                  value={exp.company}
+                  onChange={(e) => update(i, "company", e.target.value)}
+                />
+              </div>
+              <div className="space-y-1.5 col-span-2">
+                <Label>Date</Label>
+                <Input
+                  value={exp.date}
+                  onChange={(e) => update(i, "date", e.target.value)}
+                  placeholder="Jan 2023 – Present"
+                />
+              </div>
+              <div className="space-y-1.5 col-span-2">
+                <Label>Description</Label>
+                <Textarea
+                  value={exp.description}
+                  onChange={(e) => update(i, "description", e.target.value)}
+                  rows={2}
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label>Tasks</Label>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => update(i, "tasks", [...exp.tasks, ""])}
+                >
+                  <Plus className="h-3.5 w-3.5 mr-1" /> Add task
+                </Button>
+              </div>
+              {exp.tasks.map((task, ti) => (
+                <div key={ti} className="flex gap-2">
+                  <Input
+                    value={task}
+                    onChange={(e) => {
+                      const tasks = exp.tasks.map((t, j) =>
+                        j === ti ? e.target.value : t,
+                      );
+                      update(i, "tasks", tasks);
+                    }}
+                    placeholder="Task description..."
+                  />
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="shrink-0"
+                    onClick={() =>
+                      update(
+                        i,
+                        "tasks",
+                        exp.tasks.filter((_, j) => j !== ti),
+                      )
+                    }
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </ArrayItemCard>
+        ))}
+      </CardContent>
+    </Card>
+  );
+}

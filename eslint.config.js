@@ -1,36 +1,29 @@
-const globals = require("globals");
-const js = require("@eslint/js");
-const tseslint = require("typescript-eslint");
-const prettier = require("eslint-plugin-prettier");
-const prettierConfig = require("eslint-config-prettier");
+const { FlatCompat } = require("@eslint/eslintrc");
+
+const compat = new FlatCompat({
+  baseDirectory: __dirname,
+});
 
 module.exports = [
   {
-    ignores: ["node_modules/**", "dist/**", "output/**", "public/**"],
+    ignores: [
+      "node_modules/**",
+      ".next/**",
+      "dist/**",
+      "output/**",
+      "public/**",
+      "src/controllers/**",
+      "src/services/**",
+      "src/data/**",
+      "src/utils/**",
+      "src/server.ts",
+      "src/types.d.ts",
+      "scripts/**",
+      "eslint.config.js",
+      "next-env.d.ts",
+      "tailwind.config.ts",
+      "postcss.config.mjs",
+    ],
   },
-  js.configs.recommended,
-  ...tseslint.configs.recommended,
-  prettierConfig,
-  {
-    plugins: {
-      prettier: prettier,
-    },
-    languageOptions: {
-      ecmaVersion: 2020,
-      sourceType: "module",
-      globals: {
-        ...globals.node,
-      },
-    },
-    rules: {
-      "prettier/prettier": "error",
-      "@typescript-eslint/no-explicit-any": "warn",
-    },
-  },
-  {
-    files: ["**/*.js"],
-    rules: {
-      "@typescript-eslint/no-require-imports": "off",
-    },
-  },
+  ...compat.extends("next/core-web-vitals", "next/typescript"),
 ];
