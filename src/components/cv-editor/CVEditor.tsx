@@ -37,8 +37,8 @@ export function CVEditor() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="lg:col-span-2 xl:col-span-3 space-y-6 min-w-0">
           <HeaderSection
             header={store.cv.header}
             onChange={(header) => store.setCV((prev) => ({ ...prev, header }))}
@@ -85,7 +85,7 @@ export function CVEditor() {
           />
         </div>
 
-        <div className="space-y-4 lg:sticky lg:top-20 lg:self-start">
+        <div className="space-y-4 lg:sticky lg:top-20 lg:self-start min-w-0">
           <GenerationSettings
             settings={store.settings}
             onChange={store.setSettings}

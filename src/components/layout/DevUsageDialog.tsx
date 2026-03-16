@@ -65,7 +65,7 @@ export function DevUsageDialog() {
           API
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="w-[calc(100vw-2rem)] sm:max-w-2xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>API Usage</DialogTitle>
           <DialogDescription>
@@ -78,7 +78,7 @@ export function DevUsageDialog() {
 
           <div className="space-y-2 text-muted-foreground">
             <p className="font-medium text-foreground">Parameters</p>
-            <div className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5">
+            <div className="grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-x-4 gap-y-1.5">
               <code className="text-xs bg-muted px-1.5 py-0.5 rounded self-start">
                 cv
               </code>
