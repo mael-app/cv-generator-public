@@ -51,17 +51,11 @@ export function GenerateButton({
       });
 
       if (!response.ok) {
-        const data = await response.json();
+        const data = await response.json().catch(() => ({}));
         throw new Error(data.error || "Generation failed");
       }
 
-      const { downloadUrl } = await response.json();
-
-      // Trigger download
-      const dlResponse = await fetch(downloadUrl);
-      if (!dlResponse.ok) throw new Error("Download failed");
-
-      const blob = await dlResponse.blob();
+      const blob = await response.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;

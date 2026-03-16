@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import crypto from "crypto";
 import { CVSchema } from "@/lib/schemas/cv.schema";
 import { ColorService } from "@/lib/color/color.service";
 import { renderCV } from "@/lib/pdf/renderer";
 import { BrowserService } from "@/lib/pdf/browser";
-import { TokenStore } from "@/lib/tokens/token.store";
 import logger from "@/lib/logger";
 
 export const runtime = "nodejs";
@@ -67,19 +65,18 @@ export async function POST(request: NextRequest) {
       color = await ColorService.findBrandColor(domain.trim());
     }
 
-    // Render HTML
+    // Render HTML and generate PDF
     const html = await renderCV({ cv, photoBase64, color, theme });
-
-    // Generate PDF
     const pdfBuffer = await BrowserService.generatePdf(html);
 
-    // Store with token
-    const token = crypto.randomUUID();
-    TokenStore.set(token, pdfBuffer);
-
-    return NextResponse.json({
-      downloadUrl: `/api/download/${token}`,
-      expiresIn: 300,
+    // Return PDF directly — no token store, no multi-instance issue
+    return new NextResponse(new Uint8Array(pdfBuffer), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": 'attachment; filename="cv.pdf"',
+        "Content-Length": pdfBuffer.length.toString(),
+      },
     });
   } catch (error) {
     logger.error({ err: error }, "CV generation failed");
