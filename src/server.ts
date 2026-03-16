@@ -1,11 +1,12 @@
 import express from "express";
 import { CVController } from "./controllers/cv.controller";
+import { EditorController } from "./controllers/editor.controller";
 import uploadController from "./controllers/upload.controller";
 
 const app = express();
 const PORT = 3000;
 
-// Configuration EJS
+// EJS configuration
 app.set("view engine", "ejs");
 app.set("views", "./src/views");
 
@@ -19,9 +20,6 @@ app.use("/output", express.static("output"));
 app.use("/uploads", express.static("uploads"));
 
 // Routes
-// Editor Routes
-import { EditorController } from "./controllers/editor.controller";
-
 app.get("/", EditorController.editor); // Public Editor
 app.post("/generate-cv", CVController.generate); // Generate from POST (Editor)
 

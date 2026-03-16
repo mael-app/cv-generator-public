@@ -6,14 +6,13 @@ import { BrowserService } from "../services/browser.service";
 import { HistoryService } from "../services/history.service";
 import { imageToBase64 } from "../utils/image.utils";
 
-import { CVData } from "../data/cv.schema";
+import { CVData, CVSchema } from "../data/cv.schema";
 import { DataService } from "../services/data.service";
 
 export class CVController {
   static async generate(req: Request, res: Response) {
     const start = Date.now();
 
-    // Validation des données
     let validCV: CVData;
     let targetDomain = req.query.domain as string | undefined;
     let forcedColor = req.query.color as string | undefined;
@@ -21,7 +20,14 @@ export class CVController {
     // 1. Try from Body (POST) - Client-side state
     if (req.body && req.body.cv) {
       console.log("CV Data received from Client");
-      validCV = req.body.cv;
+      const parseResult = CVSchema.safeParse(req.body.cv);
+      if (!parseResult.success) {
+        res
+          .status(400)
+          .json({ error: "Invalid CV data", details: parseResult.error });
+        return;
+      }
+      validCV = parseResult.data;
       if (req.body.settings?.domain) targetDomain = req.body.settings.domain;
       if (req.body.settings?.color) forcedColor = req.body.settings.color;
     } else {
@@ -101,8 +107,11 @@ export class CVController {
       const pdfBuffer = await BrowserService.generatePdf(htmlContent);
 
       // 5. Send Response
-      const filename = targetDomain
-        ? `cv-${targetDomain}.pdf`
+      const sanitizedDomain = targetDomain
+        ? targetDomain.replace(/[^a-zA-Z0-9.-]/g, "")
+        : null;
+      const filename = sanitizedDomain
+        ? `cv-${sanitizedDomain}.pdf`
         : `cv-generated.pdf`;
       const duration = ((Date.now() - start) / 1000).toFixed(2);
 
@@ -117,12 +126,8 @@ export class CVController {
       res.end(pdfBuffer);
     } catch (error) {
       console.error(`💥 CRITICAL ERROR:`, error);
-      res.status(500).send("Erreur lors de la génération du CV");
+      res.status(500).send("Error generating CV");
     }
-  }
-
-  static async index(req: Request, res: Response) {
-    res.render("index");
   }
 
   static async getColor(req: Request, res: Response) {

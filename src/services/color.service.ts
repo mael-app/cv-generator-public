@@ -10,7 +10,7 @@ interface ColorMetric {
 export class ColorService {
   public static async findBrandColor(domain: string): Promise<string> {
     try {
-      // 1. Essai Clearbit
+      // 1. Try Clearbit
       try {
         console.log(`   🔎 Trying Clearbit...`);
         const logoUrl = `https://logo.clearbit.com/${domain}`;
@@ -25,7 +25,7 @@ export class ColorService {
         console.log(`   ⚠️  Clearbit failed (${errorMsg}), trying Google...`);
       }
 
-      // 2. Essai Google
+      // 2. Try Google Favicon
       try {
         const googleUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
         const response = await axios.get(googleUrl, {
@@ -61,9 +61,8 @@ export class ColorService {
       console.log("   🎨 Palette found:", metrics.map((m) => m.hex).join(", "));
 
       const bestColor = metrics.find((c: ColorMetric) => {
-        const isNotWhite = c.luminance < 0.95; // Relaxed from 0.90
-        const isNotBlack = c.luminance > 0.05; // Relaxed from 0.10
-        // const isNotGrey = c.saturation > 0.15; // Removed saturation filter for now
+        const isNotWhite = c.luminance < 0.95;
+        const isNotBlack = c.luminance > 0.05;
         return isNotWhite && isNotBlack;
       });
 
@@ -72,7 +71,7 @@ export class ColorService {
         return bestColor.hex;
       } else {
         console.log(
-          "   Aucune couleur valide après filtrage (trop blanc/noir/gris).",
+          "   No valid color after filtering (too white/black/grey).",
         );
       }
 
@@ -80,7 +79,7 @@ export class ColorService {
       return metrics[0]?.hex || "#005eb8";
     } catch (e: unknown) {
       const message = e instanceof Error ? e.message : "Unknown error";
-      console.log("   Erreur extraction couleur image:", message);
+      console.log("   Error extracting color from image:", message);
       return "#005eb8";
     }
   }

@@ -28,11 +28,11 @@ const fileFilter = (
   file: Express.Multer.File,
   cb: multer.FileFilterCallback,
 ) => {
-  const allowedTypes = /jpeg|jpg|png|gif/;
+  const allowedTypes = /^(jpeg|jpg|png|gif)$/;
   const extname = allowedTypes.test(
-    path.extname(file.originalname).toLowerCase(),
+    path.extname(file.originalname).toLowerCase().slice(1),
   );
-  const mimetype = allowedTypes.test(file.mimetype);
+  const mimetype = /^image\/(jpeg|png|gif)$/.test(file.mimetype);
 
   if (mimetype && extname) {
     cb(null, true);
