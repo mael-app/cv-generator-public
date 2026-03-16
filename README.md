@@ -4,55 +4,57 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](https://nodejs.org)
 
-Generate a professionally styled CV/Resume PDF with **dynamic brand color extraction** from company logos. Fill in your details via a web editor, hit Generate, and get a ready-to-send PDF — automatically styled with your target company's brand color.
+Generate a professionally styled CV/Resume PDF with **dynamic brand color extraction** from company logos. Fill in your details via the dashboard, hit Generate, and get a ready-to-send PDF — automatically styled with your target company's brand color.
 
 ## Features
 
-- **Web editor** with real-time preview
+- **Dashboard editor** — fill in all CV sections directly in the browser
 - **Brand color extraction** from company logos (Clearbit → Google favicon → fallback)
 - **PDF generation** via Puppeteer (A4, print-optimized)
-- Profile photo upload
-- History of the last 10 generated PDFs
+- Profile photo upload (JPEG / PNG / GIF, max 5 MB)
+- Light / dark PDF theme
+- Import / export CV data as JSON
+- **API support** — generate PDFs programmatically via HTTP
+- No server-side persistence — all data stays in your browser
 - Docker-ready
 
 ## Quick start
 
 ```bash
 npm install
-cp cv.example.json cv.json
+npm run dev
 ```
 
-1. Edit `cv.json` with your details.
+Open **http://localhost:3000**, fill in your details, and click **Generate PDF**.
 
-2. Add your photo and set the path in `cv.json` (`header.picturePath`).
-   - Easiest: put the image at the project root and set e.g. `"picturePath": "me.png"`.
-   - Alternatively, use the web editor upload — it will set the path automatically.
+## API usage
 
-3. Start the dev server:
+Generate PDFs programmatically — no auth required.
 
 ```bash
-npm start
+# Step 1 — Generate (returns a one-time download URL)
+RESPONSE=$(curl -s -X POST http://localhost:3000/api/generate \
+  -F "cv=<cv-data.json" \
+  -F "photo=@photo.jpg" \
+  -F "domain=apple.com" \
+  -F "theme=light")
+
+# Step 2 — Download the PDF (link expires in 5 min, single use)
+curl -s "http://localhost:3000$(echo $RESPONSE | jq -r '.downloadUrl')" \
+  -o cv.pdf
 ```
 
-The editor is available at **http://localhost:3000**.
+| Parameter | Description                                                             |
+| --------- | ----------------------------------------------------------------------- |
+| `cv`      | JSON file matching the CV schema — **required**                         |
+| `photo`   | Profile photo (JPEG / PNG / GIF, max 5 MB) — optional                   |
+| `domain`  | Company domain for brand color extraction (e.g. `apple.com`) — optional |
+| `color`   | Hex color override, takes precedence over domain — optional             |
+| `theme`   | `light` or `dark` — default: `light`                                    |
 
-## Generating a PDF
+The `POST /api/generate` response: `{ "downloadUrl": "/api/download/<token>", "expiresIn": 300 }`
 
-**Via the web editor** — open http://localhost:3000, fill in your details, and click Generate.
-
-**Via URL** — pass a `domain` to auto-extract the brand color:
-
-```
-http://localhost:3000/generate-cv?domain=credit-agricole.fr
-```
-
-**Via CLI** (requires server running):
-
-```bash
-npm run create -- apple.com
-```
-
-The PDF is saved to the `output/` folder.
+The download link is **single-use** and expires after **5 minutes**.
 
 ## Docker
 
@@ -63,22 +65,19 @@ docker run -p 3000:3000 cv-generator-public
 
 ## Scripts
 
-| Script                       | Description                |
-| ---------------------------- | -------------------------- |
-| `npm start`                  | Dev server with hot reload |
-| `npm test`                   | Run tests                  |
-| `npm run build`              | Compile TypeScript         |
-| `npm run lint`               | ESLint check               |
-| `npm run lint:fix`           | ESLint auto-fix            |
-| `npm run format`             | Prettier formatting        |
-| `npm run typecheck`          | TypeScript type check      |
-| `npm run create -- <domain>` | Generate PDF from CLI      |
+| Script              | Description                |
+| ------------------- | -------------------------- |
+| `npm run dev`       | Dev server with hot reload |
+| `npm run build`     | Production build           |
+| `npm start`         | Start production server    |
+| `npm run lint`      | ESLint check               |
+| `npm run typecheck` | TypeScript type check      |
 
 ## Tech stack
 
-- **Runtime:** Node.js, Express 5, TypeScript
-- **PDF:** Puppeteer (headless Chrome)
-- **Templating:** EJS
+- **Framework:** Next.js 15 (App Router), React 19, TypeScript
+- **PDF:** Puppeteer (headless Chrome), EJS templating
+- **UI:** Tailwind CSS, shadcn/ui, next-themes
 - **Validation:** Zod
 - **Color extraction:** get-image-colors
 
