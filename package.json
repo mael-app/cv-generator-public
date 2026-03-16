@@ -1,5 +1,5 @@
 {
-  "name": "cv-generator",
+  "name": "cv-generator-public",
   "version": "1.0.0",
   "description": "Generate a professionally styled CV/Resume PDF with dynamic brand color extraction from company logos.",
   "main": "index.js",
@@ -67,6 +67,7 @@
   },
   "overrides": {
     "form-data": "^4.0.0",
-    "tough-cookie": "^4.1.3"
+    "tough-cookie": "^4.1.3",
+    "qs": "^6.15.0"
   }
 }

@@ -1,6 +1,6 @@
 # CV Generator
 
-[![CI](https://github.com/mael-app/cv-generator/actions/workflows/ci.yml/badge.svg)](https://github.com/mael-app/cv-generator/actions/workflows/ci.yml)
+[![CI](https://github.com/mael-app/cv-generator-public/actions/workflows/ci.yml/badge.svg)](https://github.com/mael-app/cv-generator-public/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](https://nodejs.org)
 
@@ -57,8 +57,8 @@ The PDF is saved to the `output/` folder.
 ## Docker
 
 ```bash
-docker build -t cv-generator .
-docker run -p 3000:3000 cv-generator
+docker build -t cv-generator-public .
+docker run -p 3000:3000 cv-generator-public
 ```
 
 ## Scripts

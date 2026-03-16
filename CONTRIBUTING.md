@@ -11,8 +11,8 @@ Thank you for your interest in contributing! Here's everything you need to get s
 ## Local setup
 
 ```bash
-git clone https://github.com/mael-app/cv-generator.git
-cd cv-generator
+git clone https://github.com/mael-app/cv-generator-public.git
+cd cv-generator-public
 npm install
 cp cv.example.json cv.json
 npm start
