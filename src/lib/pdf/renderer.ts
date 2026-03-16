@@ -2,6 +2,7 @@ import ejs from "ejs";
 import path from "path";
 import { CVData } from "@/lib/schemas/cv.schema";
 import { getInlinedFontStyle } from "./font-inliner";
+import logger from "@/lib/logger";
 
 interface RenderOptions {
   cv: CVData;
@@ -60,12 +61,23 @@ export async function renderCV({
   // so Puppeteer can render fonts without network access
   try {
     const fontStyle = await getInlinedFontStyle();
-    htmlContent = htmlContent.replace(
+    const replaced = htmlContent.replace(
       /<link\s[^>]*fonts\.googleapis\.com[^>]*>/,
       fontStyle,
     );
-  } catch {
-    // If font fetch fails, keep the original link (Puppeteer may still load them)
+    if (replaced === htmlContent) {
+      logger.warn(
+        "Font <link> tag not found in template — fonts may not render",
+      );
+    } else {
+      logger.debug("Google Fonts inlined successfully");
+      htmlContent = replaced;
+    }
+  } catch (err) {
+    logger.error(
+      { err },
+      "Font inlining failed — PDF will render without custom fonts",
+    );
   }
 
   return htmlContent;

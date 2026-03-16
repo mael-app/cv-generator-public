@@ -17,16 +17,12 @@ const BASE_URL =
     ? `${window.location.protocol}//${window.location.host}`
     : "http://localhost:3000";
 
-const CURL_COMMAND = `# Step 1 — Generate (returns a one-time download URL)
-RESPONSE=$(curl -s -X POST ${BASE_URL}/api/generate \\
+const CURL_COMMAND = `curl -X POST ${BASE_URL}/api/generate \\
   -F "cv=<cv-data.json" \\
   -F "photo=@photo.jpg" \\
   -F "domain=apple.com" \\
   -F "color=#005eb8" \\
-  -F "theme=light")
-
-# Step 2 — Download the PDF (link expires in 5 min, single use)
-curl -s "${BASE_URL}$(echo $RESPONSE | jq -r '.downloadUrl')" \\
+  -F "theme=light" \\
   -o cv.pdf`;
 
 function CodeBlock({ code }: { code: string }) {
@@ -116,14 +112,16 @@ export function DevUsageDialog() {
 
           <div className="space-y-2 text-muted-foreground">
             <p className="font-medium text-foreground">Response</p>
-            <CodeBlock
-              code={`{ "downloadUrl": "/api/download/<token>", "expiresIn": 300 }`}
-            />
             <p>
-              The download link is{" "}
-              <strong className="text-foreground">single-use</strong> and
-              expires after{" "}
-              <strong className="text-foreground">5 minutes</strong>.
+              Returns the PDF binary directly as{" "}
+              <code className="text-xs bg-muted px-1.5 py-0.5 rounded">
+                application/pdf
+              </code>
+              . On error, returns JSON with an{" "}
+              <code className="text-xs bg-muted px-1.5 py-0.5 rounded">
+                error
+              </code>{" "}
+              field.
             </p>
           </div>
         </div>
