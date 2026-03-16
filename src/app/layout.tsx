@@ -30,6 +30,26 @@ export default function RootLayout({
           <main className="container mx-auto px-4 py-8 max-w-6xl">
             {children}
           </main>
+          <footer className="border-t mt-12 py-4 text-center text-sm text-muted-foreground">
+            Made by{" "}
+            <a
+              href="https://github.com/mael-app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-foreground hover:underline"
+            >
+              Maël
+            </a>{" "}
+            with ❤️ —{" "}
+            <a
+              href="https://github.com/mael-app/cv-generator-public"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-foreground hover:underline"
+            >
+              Source code
+            </a>
+          </footer>
         </ThemeProvider>
       </body>
     </html>
