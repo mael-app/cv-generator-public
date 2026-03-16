@@ -15,7 +15,12 @@ export function buildCVFormData(
     formData.append("photo", photoFile);
   } else if (photoPreview) {
     const [header, b64] = photoPreview.split(",");
-    const mime = header.match(/:(.*?);/)?.[1] ?? "image/jpeg";
+    const colonIdx = header.indexOf(":");
+    const semicolonIdx = header.indexOf(";");
+    const mime =
+      colonIdx !== -1 && semicolonIdx !== -1
+        ? header.slice(colonIdx + 1, semicolonIdx)
+        : "image/jpeg";
     const binary = atob(b64);
     const bytes = new Uint8Array(binary.length);
     for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
