@@ -4,10 +4,13 @@ import { useState, useEffect, useCallback } from "react";
 import { CVData } from "@/lib/schemas/cv.schema";
 import { getLocalStorage, setLocalStorage } from "@/lib/storage/local-storage";
 
+export type { CVLanguage } from "@/lib/pdf/renderer";
+
 export interface CVSettings {
   domain: string;
   color: string;
   theme: "light" | "dark";
+  cvLanguage: CVLanguage | "auto"; // "auto" = follow UI language
 }
 
 const DEFAULT_CV: CVData = {
@@ -36,6 +39,7 @@ const DEFAULT_SETTINGS: CVSettings = {
   domain: "",
   color: "",
   theme: "light",
+  cvLanguage: "auto",
 };
 
 export function useCVStore() {

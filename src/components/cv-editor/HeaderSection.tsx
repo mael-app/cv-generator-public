@@ -1,6 +1,7 @@
 "use client";
 
 import { HeaderData } from "@/lib/schemas/cv.schema";
+import { useT } from "@/context/LanguageContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,6 +22,9 @@ export function HeaderSection({
   onPhotoChange,
   onPhotoClear,
 }: Props) {
+  const { t } = useT();
+  const th = t.editor.header;
+
   const update = (field: keyof HeaderData, value: string) => {
     onChange({ ...header, [field]: value });
   };
@@ -32,7 +36,7 @@ export function HeaderSection({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Personal Information</CardTitle>
+        <CardTitle>{th.title}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <PhotoUpload
@@ -42,82 +46,82 @@ export function HeaderSection({
         />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1.5">
-            <Label>Full Name</Label>
+            <Label>{th.name.label}</Label>
             <Input
               value={header.name}
               onChange={(e) => update("name", e.target.value)}
-              placeholder="John Doe"
+              placeholder={th.name.placeholder}
             />
           </div>
           <div className="space-y-1.5">
-            <Label>Job Title</Label>
+            <Label>{th.jobTitle.label}</Label>
             <Input
               value={header.title}
               onChange={(e) => update("title", e.target.value)}
-              placeholder="Software Engineer"
+              placeholder={th.jobTitle.placeholder}
             />
           </div>
           <div className="space-y-1.5">
-            <Label>Job Search Goal</Label>
+            <Label>{th.jobSearchGoal.label}</Label>
             <Input
               value={header.jobSearchGoal}
               onChange={(e) => update("jobSearchGoal", e.target.value)}
-              placeholder="Looking for..."
+              placeholder={th.jobSearchGoal.placeholder}
             />
           </div>
           <div className="space-y-1.5">
-            <Label>Age</Label>
+            <Label>{th.age.label}</Label>
             <Input
               value={header.age}
               onChange={(e) => update("age", e.target.value)}
-              placeholder="25 years old"
+              placeholder={th.age.placeholder}
             />
           </div>
         </div>
         <div className="border-t pt-4">
           <h4 className="text-sm font-medium mb-3 text-muted-foreground uppercase tracking-wide">
-            Contact
+            {th.contact.heading}
           </h4>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <Label>Email</Label>
+              <Label>{th.contact.email.label}</Label>
               <Input
                 value={header.contact.email}
                 onChange={(e) => updateContact("email", e.target.value)}
-                placeholder="john@example.com"
+                placeholder={th.contact.email.placeholder}
                 type="email"
               />
             </div>
             <div className="space-y-1.5">
-              <Label>Phone</Label>
+              <Label>{th.contact.phone.label}</Label>
               <Input
                 value={header.contact.phone}
                 onChange={(e) => updateContact("phone", e.target.value)}
-                placeholder="+33 6 12 34 56 78"
+                placeholder={th.contact.phone.placeholder}
               />
             </div>
             <div className="space-y-1.5">
-              <Label>Location</Label>
+              <Label>{th.contact.location.label}</Label>
               <Input
                 value={header.contact.location}
                 onChange={(e) => updateContact("location", e.target.value)}
-                placeholder="Paris, France"
+                placeholder={th.contact.location.placeholder}
               />
             </div>
             <div className="space-y-1.5">
-              <Label>LinkedIn</Label>
+              <Label>{th.contact.linkedin.label}</Label>
               <Input
                 value={header.contact.linkedin}
                 onChange={(e) => updateContact("linkedin", e.target.value)}
-                placeholder="linkedin.com/in/johndoe"
+                placeholder={th.contact.linkedin.placeholder}
               />
             </div>
             <div className="space-y-1.5">
-              <Label>GitHub</Label>
+              <Label>{th.contact.github.label}</Label>
               <Input
                 value={header.contact.github}
                 onChange={(e) => updateContact("github", e.target.value)}
-                placeholder="github.com/johndoe"
+                placeholder={th.contact.github.placeholder}
               />
             </div>
           </div>

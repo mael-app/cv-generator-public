@@ -1,6 +1,7 @@
 "use client";
 
 import { EducationData } from "@/lib/schemas/cv.schema";
+import { useT } from "@/context/LanguageContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,6 +23,9 @@ const newEdu = (): EducationData => ({
 });
 
 export function EducationSection({ education, onChange }: Props) {
+  const { t } = useT();
+  const te = t.editor.education;
+
   const update = (index: number, field: keyof EducationData, value: string) => {
     onChange(
       education.map((e, i) => (i === index ? { ...e, [field]: value } : e)),
@@ -31,19 +35,19 @@ export function EducationSection({ education, onChange }: Props) {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle>Education</CardTitle>
+        <CardTitle>{te.title}</CardTitle>
         <Button
           variant="outline"
           size="sm"
           onClick={() => onChange([...education, newEdu()])}
         >
-          <Plus className="h-4 w-4 mr-1" /> Add
+          <Plus className="h-4 w-4 mr-1" /> {te.add}
         </Button>
       </CardHeader>
       <CardContent className="space-y-3">
         {education.length === 0 && (
           <p className="text-sm text-muted-foreground text-center py-4">
-            No education yet
+            {te.empty}
           </p>
         )}
         {education.map((edu, i) => (
@@ -54,29 +58,29 @@ export function EducationSection({ education, onChange }: Props) {
           >
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label>Degree</Label>
+                <Label>{te.degree}</Label>
                 <Input
                   value={edu.degree}
                   onChange={(e) => update(i, "degree", e.target.value)}
                 />
               </div>
               <div className="space-y-1.5">
-                <Label>School</Label>
+                <Label>{te.school}</Label>
                 <Input
                   value={edu.school}
                   onChange={(e) => update(i, "school", e.target.value)}
                 />
               </div>
               <div className="space-y-1.5 col-span-2">
-                <Label>Date</Label>
+                <Label>{te.date.label}</Label>
                 <Input
                   value={edu.date}
                   onChange={(e) => update(i, "date", e.target.value)}
-                  placeholder="2020 – 2023"
+                  placeholder={te.date.placeholder}
                 />
               </div>
               <div className="space-y-1.5 col-span-2">
-                <Label>Details</Label>
+                <Label>{te.details}</Label>
                 <Textarea
                   value={edu.details}
                   onChange={(e) => update(i, "details", e.target.value)}

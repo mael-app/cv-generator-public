@@ -1,6 +1,7 @@
 "use client";
 
 import { ExperienceData } from "@/lib/schemas/cv.schema";
+import { useT } from "@/context/LanguageContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,33 +24,35 @@ const newExp = (): ExperienceData => ({
 });
 
 export function ExperiencesSection({ experiences, onChange }: Props) {
+  const { t } = useT();
+  const te = t.editor.experiences;
+
   const update = (
     index: number,
     field: keyof ExperienceData,
     value: string | string[],
   ) => {
-    const next = experiences.map((e, i) =>
-      i === index ? { ...e, [field]: value } : e,
+    onChange(
+      experiences.map((e, i) => (i === index ? { ...e, [field]: value } : e)),
     );
-    onChange(next);
   };
 
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle>Work Experience</CardTitle>
+        <CardTitle>{te.title}</CardTitle>
         <Button
           variant="outline"
           size="sm"
           onClick={() => onChange([...experiences, newExp()])}
         >
-          <Plus className="h-4 w-4 mr-1" /> Add
+          <Plus className="h-4 w-4 mr-1" /> {te.add}
         </Button>
       </CardHeader>
       <CardContent className="space-y-3">
         {experiences.length === 0 && (
           <p className="text-sm text-muted-foreground text-center py-4">
-            No experiences yet
+            {te.empty}
           </p>
         )}
         {experiences.map((exp, i) => (
@@ -60,29 +63,29 @@ export function ExperiencesSection({ experiences, onChange }: Props) {
           >
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label>Role</Label>
+                <Label>{te.role}</Label>
                 <Input
                   value={exp.role}
                   onChange={(e) => update(i, "role", e.target.value)}
                 />
               </div>
               <div className="space-y-1.5">
-                <Label>Company</Label>
+                <Label>{te.company}</Label>
                 <Input
                   value={exp.company}
                   onChange={(e) => update(i, "company", e.target.value)}
                 />
               </div>
               <div className="space-y-1.5 col-span-2">
-                <Label>Date</Label>
+                <Label>{te.date.label}</Label>
                 <Input
                   value={exp.date}
                   onChange={(e) => update(i, "date", e.target.value)}
-                  placeholder="Jan 2023 – Present"
+                  placeholder={te.date.placeholder}
                 />
               </div>
               <div className="space-y-1.5 col-span-2">
-                <Label>Description</Label>
+                <Label>{te.description}</Label>
                 <Textarea
                   value={exp.description}
                   onChange={(e) => update(i, "description", e.target.value)}
@@ -92,13 +95,13 @@ export function ExperiencesSection({ experiences, onChange }: Props) {
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label>Tasks</Label>
+                <Label>{te.tasks.label}</Label>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => update(i, "tasks", [...exp.tasks, ""])}
                 >
-                  <Plus className="h-3.5 w-3.5 mr-1" /> Add task
+                  <Plus className="h-3.5 w-3.5 mr-1" /> {te.tasks.add}
                 </Button>
               </div>
               {exp.tasks.map((task, ti) => (
@@ -111,7 +114,7 @@ export function ExperiencesSection({ experiences, onChange }: Props) {
                       );
                       update(i, "tasks", tasks);
                     }}
-                    placeholder="Task description..."
+                    placeholder={te.tasks.placeholder}
                   />
                   <Button
                     variant="ghost"

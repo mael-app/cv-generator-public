@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useCVStore } from "@/hooks/useCVStore";
+import { useT } from "@/context/LanguageContext";
 import { HeaderSection } from "./HeaderSection";
 import { ExperiencesSection } from "./ExperiencesSection";
 import { ProjectsSection } from "./ProjectsSection";
@@ -20,6 +21,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export function CVEditor() {
   const store = useCVStore();
+  const { t } = useT();
   const [previewHtml, setPreviewHtml] = useState<string | null>(null);
 
   if (!store.hydrated) {
@@ -35,7 +37,7 @@ export function CVEditor() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold">CV Editor</h1>
+        <h1 className="text-2xl font-bold">{t.editor.title}</h1>
         <div className="flex gap-2 flex-wrap">
           <ImportButton onImport={store.setCV} />
           <ExportButton cv={store.cv} />

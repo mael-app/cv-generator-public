@@ -1,6 +1,7 @@
 "use client";
 
 import { ProjectData } from "@/lib/schemas/cv.schema";
+import { useT } from "@/context/LanguageContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,6 +22,9 @@ const newProject = (): ProjectData => ({
 });
 
 export function ProjectsSection({ projects, onChange }: Props) {
+  const { t } = useT();
+  const tp = t.editor.projects;
+
   const update = (index: number, field: keyof ProjectData, value: string) => {
     onChange(
       projects.map((p, i) => (i === index ? { ...p, [field]: value } : p)),
@@ -30,19 +34,19 @@ export function ProjectsSection({ projects, onChange }: Props) {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle>Projects</CardTitle>
+        <CardTitle>{tp.title}</CardTitle>
         <Button
           variant="outline"
           size="sm"
           onClick={() => onChange([...projects, newProject()])}
         >
-          <Plus className="h-4 w-4 mr-1" /> Add
+          <Plus className="h-4 w-4 mr-1" /> {tp.add}
         </Button>
       </CardHeader>
       <CardContent className="space-y-3">
         {projects.length === 0 && (
           <p className="text-sm text-muted-foreground text-center py-4">
-            No projects yet
+            {tp.empty}
           </p>
         )}
         {projects.map((p, i) => (
@@ -52,22 +56,22 @@ export function ProjectsSection({ projects, onChange }: Props) {
             onDelete={() => onChange(projects.filter((_, j) => j !== i))}
           >
             <div className="space-y-1.5">
-              <Label>Title</Label>
+              <Label>{tp.title_}</Label>
               <Input
                 value={p.title}
                 onChange={(e) => update(i, "title", e.target.value)}
               />
             </div>
             <div className="space-y-1.5">
-              <Label>Stack</Label>
+              <Label>{tp.stack.label}</Label>
               <Input
                 value={p.stack}
                 onChange={(e) => update(i, "stack", e.target.value)}
-                placeholder="React, Node.js, PostgreSQL"
+                placeholder={tp.stack.placeholder}
               />
             </div>
             <div className="space-y-1.5">
-              <Label>Description</Label>
+              <Label>{tp.description}</Label>
               <Textarea
                 value={p.description}
                 onChange={(e) => update(i, "description", e.target.value)}

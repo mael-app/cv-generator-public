@@ -340,7 +340,7 @@
         </header>
         <div class="content">
             <div class="main-col">
-                <h2>Expérience Professionnelle</h2>
+                <h2><%= labels.experiences %></h2>
                 <% experiences.forEach(function(exp) { %>
                     <div class="exp-item">
                         <div class="item-header"><span class="role">
@@ -364,7 +364,7 @@
                     </div>
                     <% }); %>
 
-                        <h2>Projets Significatifs</h2>
+                        <h2><%= labels.projects %></h2>
                         <% projects.forEach(function(p) { %>
                             <div class="project-box">
                                 <div class="project-title">
@@ -380,7 +380,7 @@
                             <% }); %>
             </div>
             <div class="side-col">
-                <h2>Formation</h2>
+                <h2><%= labels.education %></h2>
                 <% education.forEach(function(edu) { %>
                     <div class="edu-item">
                         <div class="role">
@@ -398,7 +398,7 @@
                     </div>
                     <% }); %>
 
-                        <h2>HARD SKILLS</h2>
+                        <h2><%= labels.hardSkills %></h2>
                         <div class="skills-container">
                             <% skills.forEach(function(s) { %>
                                 <span class="skill-tag">
@@ -407,7 +407,7 @@
                                 <% }); %>
                         </div>
 
-                        <h2 style="margin-top: 20px">SOFT SKILLS</h2>
+                        <h2 style="margin-top: 20px"><%= labels.softSkills %></h2>
                         <ul>
                             <% softSkills.forEach(function(s) { %>
                                 <li>
@@ -416,7 +416,7 @@
                                 <% }); %>
                         </ul>
 
-                        <h2 style="margin-top: 25px">Langues</h2>
+                        <h2 style="margin-top: 25px"><%= labels.languages %></h2>
                         <% languages.forEach(function(l) { %>
                             <div class="edu-item">
                                 <div class="item-header"><span class="role" style="font-size:14px">

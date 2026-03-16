@@ -4,11 +4,33 @@ import { CVData } from "@/lib/schemas/cv.schema";
 import { getInlinedFontStyle } from "./font-inliner";
 import logger from "@/lib/logger";
 
+export type CVLanguage = "fr" | "en";
+
+const CV_LABELS: Record<CVLanguage, Record<string, string>> = {
+  fr: {
+    experiences: "Expérience Professionnelle",
+    projects: "Projets Significatifs",
+    education: "Formation",
+    hardSkills: "Hard Skills",
+    softSkills: "Soft Skills",
+    languages: "Langues",
+  },
+  en: {
+    experiences: "Work Experience",
+    projects: "Significant Projects",
+    education: "Education",
+    hardSkills: "Hard Skills",
+    softSkills: "Soft Skills",
+    languages: "Languages",
+  },
+};
+
 interface RenderOptions {
   cv: CVData;
   photoBase64?: string;
   color: string;
   theme: "light" | "dark";
+  cvLanguage?: CVLanguage;
   inlineFonts?: boolean;
 }
 
@@ -17,6 +39,7 @@ export async function renderCV({
   photoBase64,
   color,
   theme,
+  cvLanguage = "fr",
   inlineFonts = true,
 }: RenderOptions): Promise<string> {
   // Format Links
@@ -39,8 +62,11 @@ export async function renderCV({
 
   const mainColor = `#${color.replace("#", "")}`;
 
+  const labels = CV_LABELS[cvLanguage];
+
   const viewData = {
     ...cv,
+    labels,
     header: {
       ...cv.header,
       pictureBase64: photoBase64 || null,

@@ -1,6 +1,7 @@
 "use client";
 
 import { CVData } from "@/lib/schemas/cv.schema";
+import { useT } from "@/context/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 
@@ -9,6 +10,8 @@ interface Props {
 }
 
 export function ExportButton({ cv }: Props) {
+  const { t } = useT();
+
   const handleExport = () => {
     const json = JSON.stringify(cv, null, 2);
     const blob = new Blob([json], { type: "application/json" });
@@ -25,7 +28,7 @@ export function ExportButton({ cv }: Props) {
   return (
     <Button variant="outline" size="sm" onClick={handleExport}>
       <Download className="h-4 w-4 mr-1.5" />
-      Export JSON
+      {t.importExport.export}
     </Button>
   );
 }

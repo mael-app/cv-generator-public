@@ -1,6 +1,8 @@
 "use client";
 
 import { useRef } from "react";
+import { useT } from "@/context/LanguageContext";
+import { MAX_PHOTO_SIZE } from "@/lib/cv/constants";
 import { Button } from "@/components/ui/button";
 import { X, Upload } from "lucide-react";
 import Image from "next/image";
@@ -11,18 +13,18 @@ interface Props {
   onClear: () => void;
 }
 
-const MAX_SIZE = 5 * 1024 * 1024;
-
 export function PhotoUpload({ preview, onChange, onClear }: Props) {
+  const { t } = useT();
+  const tp = t.editor.photo;
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleFile = (file: File) => {
-    if (file.size > MAX_SIZE) {
-      alert("Photo must be under 5MB");
+    if (file.size > MAX_PHOTO_SIZE) {
+      alert(tp.tooLarge);
       return;
     }
     if (!file.type.startsWith("image/")) {
-      alert("Please select an image file");
+      alert(tp.invalidType);
       return;
     }
     const reader = new FileReader();
@@ -39,7 +41,7 @@ export function PhotoUpload({ preview, onChange, onClear }: Props) {
         <div className="relative">
           <Image
             src={preview}
-            alt="Profile photo"
+            alt={tp.alt}
             width={80}
             height={80}
             className="rounded-full object-cover border-2 border-border"
@@ -66,11 +68,9 @@ export function PhotoUpload({ preview, onChange, onClear }: Props) {
           size="sm"
           onClick={() => inputRef.current?.click()}
         >
-          {preview ? "Change Photo" : "Upload Photo"}
+          {preview ? tp.change : tp.upload}
         </Button>
-        <p className="text-xs text-muted-foreground mt-1">
-          JPEG, PNG or GIF — max 5MB
-        </p>
+        <p className="text-xs text-muted-foreground mt-1">{tp.hint}</p>
       </div>
       <input
         ref={inputRef}

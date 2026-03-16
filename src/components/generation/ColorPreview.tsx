@@ -1,11 +1,15 @@
 "use client";
 
+import { useT } from "@/context/LanguageContext";
+
 interface Props {
   color: string;
   loading: boolean;
 }
 
 export function ColorPreview({ color, loading }: Props) {
+  const { t } = useT();
+
   return (
     <div className="flex items-center gap-2">
       <div
@@ -13,7 +17,7 @@ export function ColorPreview({ color, loading }: Props) {
         style={{ backgroundColor: loading ? "#e2e8f0" : color }}
       />
       <span className="text-sm font-mono text-muted-foreground">
-        {loading ? "Detecting..." : color}
+        {loading ? t.generation.detecting : color}
       </span>
     </div>
   );

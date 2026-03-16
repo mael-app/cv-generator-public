@@ -16,12 +16,3 @@ export function setLocalStorage<T>(key: string, value: T): void {
     // Ignore storage errors (e.g. quota exceeded)
   }
 }
-
-export function removeLocalStorage(key: string): void {
-  if (typeof window === "undefined") return;
-  try {
-    window.localStorage.removeItem(key);
-  } catch {
-    // ignore
-  }
-}

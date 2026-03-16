@@ -3,8 +3,10 @@
 import { useState } from "react";
 import { CVData } from "@/lib/schemas/cv.schema";
 import { CVSettings } from "@/hooks/useCVStore";
+import { useT } from "@/context/LanguageContext";
+import { buildCVFormData } from "@/lib/cv/build-form-data";
 import { Button } from "@/components/ui/button";
-import { Eye, Loader2 } from "lucide-react";
+import { Eye, Loader2, AlertCircle } from "lucide-react";
 
 interface Props {
   cv: CVData;
@@ -21,60 +23,52 @@ export function PreviewButton({
   photoPreview,
   onPreview,
 }: Props) {
+  const { t, lang } = useT();
+  const tg = t.generation;
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
   const preview = async () => {
     setLoading(true);
+    setError(false);
     try {
-      const formData = new FormData();
-      formData.append("cv", JSON.stringify(cv));
-
-      if (photoFile) {
-        formData.append("photo", photoFile);
-      } else if (photoPreview) {
-        const [header, b64] = photoPreview.split(",");
-        const mime = header.match(/:(.*?);/)?.[1] ?? "image/jpeg";
-        const binary = atob(b64);
-        const bytes = new Uint8Array(binary.length);
-        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-        formData.append(
-          "photo",
-          new Blob([bytes], { type: mime }),
-          "photo.jpg",
-        );
-      }
-
-      if (settings.domain) formData.append("domain", settings.domain);
-      if (settings.color) formData.append("color", settings.color);
-      formData.append("theme", settings.theme);
-
+      const formData = buildCVFormData(
+        cv,
+        settings,
+        photoFile,
+        photoPreview,
+        lang,
+      );
       const response = await fetch("/api/preview", {
         method: "POST",
         body: formData,
       });
-      if (!response.ok) throw new Error("Preview failed");
-
+      if (!response.ok) throw new Error();
       onPreview(await response.text());
-    } catch (err) {
-      console.error(err);
+    } catch {
+      setError(true);
+      setTimeout(() => setError(false), 4000);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Button
-      variant="outline"
-      className="w-full"
-      onClick={preview}
-      disabled={loading}
-    >
-      {loading ? (
-        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-      ) : (
-        <Eye className="h-4 w-4 mr-2" />
+    <div className="space-y-2">
+      <Button
+        variant="outline"
+        className="w-full"
+        onClick={preview}
+        disabled={loading}
+      >
+        {loading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+        {error && <AlertCircle className="h-4 w-4 mr-2" />}
+        {!loading && !error && <Eye className="h-4 w-4 mr-2" />}
+        {loading ? tg.previewLoading : error ? tg.error : tg.preview}
+      </Button>
+      {error && (
+        <p className="text-xs text-red-500 text-center">{tg.previewError}</p>
       )}
-      {loading ? "Loading preview..." : "Preview"}
-    </Button>
+    </div>
   );
 }

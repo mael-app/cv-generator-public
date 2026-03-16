@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { CVData, CVSchema } from "@/lib/schemas/cv.schema";
+import { useT } from "@/context/LanguageContext";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,12 +18,15 @@ interface Props {
   onImport: (cv: CVData) => void;
 }
 
-function parseAndValidate(raw: string): { data: CVData } | { error: string } {
+function parseAndValidate(
+  raw: string,
+  errorSyntax: string,
+): { data: CVData } | { error: string } {
   let json: unknown;
   try {
     json = JSON.parse(raw);
   } catch {
-    return { error: "Invalid JSON syntax" };
+    return { error: errorSyntax };
   }
   const result = CVSchema.safeParse(json);
   if (!result.success) {
@@ -35,13 +39,15 @@ function parseAndValidate(raw: string): { data: CVData } | { error: string } {
 }
 
 export function ImportButton({ onImport }: Props) {
+  const { t } = useT();
+  const ti = t.importExport.import;
   const [open, setOpen] = useState(false);
   const [text, setText] = useState("");
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handlePasteImport = () => {
-    const result = parseAndValidate(text);
+    const result = parseAndValidate(text, ti.errorSyntax);
     if ("error" in result) {
       setError(result.error);
       return;
@@ -54,7 +60,7 @@ export function ImportButton({ onImport }: Props) {
 
   const handleFile = async (file: File) => {
     const raw = await file.text();
-    const result = parseAndValidate(raw);
+    const result = parseAndValidate(raw, ti.errorSyntax);
     if ("error" in result) {
       setError(result.error);
       return;
@@ -78,26 +84,24 @@ export function ImportButton({ onImport }: Props) {
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">
           <Upload className="h-4 w-4 mr-1.5" />
-          Import JSON
+          {ti.button}
         </Button>
       </DialogTrigger>
       <DialogContent className="w-[calc(100vw-2rem)] sm:max-w-xl">
         <DialogHeader>
-          <DialogTitle>Import CV</DialogTitle>
+          <DialogTitle>{ti.title}</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
           <div className="space-y-1.5">
-            <p className="text-sm text-muted-foreground">
-              Paste your JSON below
-            </p>
+            <p className="text-sm text-muted-foreground">{ti.pasteLabel}</p>
             <Textarea
               value={text}
               onChange={(e) => {
                 setText(e.target.value);
                 setError(null);
               }}
-              placeholder='{ "header": { "name": "John Doe", ... } }'
+              placeholder={ti.placeholder}
               className="font-mono text-xs min-h-48 resize-y"
               spellCheck={false}
             />
@@ -117,10 +121,10 @@ export function ImportButton({ onImport }: Props) {
               onClick={() => inputRef.current?.click()}
             >
               <FileJson className="h-4 w-4" />
-              Import from file
+              {ti.fromFile}
             </Button>
             <Button onClick={handlePasteImport} disabled={!text.trim()}>
-              Import
+              {ti.submit}
             </Button>
           </div>
         </div>

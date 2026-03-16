@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Terminal, Copy, Check } from "lucide-react";
+import { useT } from "@/context/LanguageContext";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -57,72 +58,55 @@ function CodeBlock({ code }: { code: string }) {
 }
 
 export function DevUsageDialog() {
+  const { t } = useT();
+  const ta = t.api;
+
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm" className="gap-1.5">
           <Terminal className="h-3.5 w-3.5" />
-          API
+          {ta.button}
         </Button>
       </DialogTrigger>
       <DialogContent className="w-[calc(100vw-2rem)] sm:max-w-2xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>API Usage</DialogTitle>
-          <DialogDescription>
-            Generate CVs programmatically via HTTP — no auth required.
-          </DialogDescription>
+          <DialogTitle>{ta.title}</DialogTitle>
+          <DialogDescription>{ta.description}</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 text-sm">
           <CodeBlock code={CURL_COMMAND} />
 
           <div className="space-y-2 text-muted-foreground">
-            <p className="font-medium text-foreground">Parameters</p>
+            <p className="font-medium text-foreground">{ta.parameters}</p>
             <div className="grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-x-4 gap-y-1.5">
               <code className="text-xs bg-muted px-1.5 py-0.5 rounded self-start">
                 cv
               </code>
-              <span>JSON file matching the CV schema — required</span>
+              <span>{ta.params.cv}</span>
               <code className="text-xs bg-muted px-1.5 py-0.5 rounded self-start">
                 photo
               </code>
-              <span>Profile photo (JPEG / PNG / GIF, max 5 MB) — optional</span>
+              <span>{ta.params.photo}</span>
               <code className="text-xs bg-muted px-1.5 py-0.5 rounded self-start">
                 domain
               </code>
-              <span>
-                Company domain for brand color extraction (e.g.{" "}
-                <em>apple.com</em>) — optional
-              </span>
+              <span>{ta.params.domain}</span>
               <code className="text-xs bg-muted px-1.5 py-0.5 rounded self-start">
                 color
               </code>
-              <span>
-                Hex color override, takes precedence over domain (e.g.{" "}
-                <em>#005eb8</em>) — optional
-              </span>
+              <span>{ta.params.color}</span>
               <code className="text-xs bg-muted px-1.5 py-0.5 rounded self-start">
                 theme
               </code>
-              <span>
-                <em>light</em> or <em>dark</em> — default: light
-              </span>
+              <span>{ta.params.theme}</span>
             </div>
           </div>
 
           <div className="space-y-2 text-muted-foreground">
-            <p className="font-medium text-foreground">Response</p>
-            <p>
-              Returns the PDF binary directly as{" "}
-              <code className="text-xs bg-muted px-1.5 py-0.5 rounded">
-                application/pdf
-              </code>
-              . On error, returns JSON with an{" "}
-              <code className="text-xs bg-muted px-1.5 py-0.5 rounded">
-                error
-              </code>{" "}
-              field.
-            </p>
+            <p className="font-medium text-foreground">{ta.response}</p>
+            <p>{ta.responseDesc}</p>
           </div>
         </div>
       </DialogContent>

@@ -1,9 +1,8 @@
 import { CVSchema, CVData } from "@/lib/schemas/cv.schema";
 import { ColorService } from "@/lib/color/color.service";
-import { renderCV } from "@/lib/pdf/renderer";
+import { renderCV, CVLanguage } from "@/lib/pdf/renderer";
+import { MAX_PHOTO_SIZE } from "@/lib/cv/constants";
 import { NextResponse } from "next/server";
-
-const MAX_PHOTO_SIZE = 5 * 1024 * 1024;
 
 export type CVRequestError = { response: NextResponse };
 export type CVRequestResult = { html: string };
@@ -73,6 +72,7 @@ export async function buildCVHtml(
   const domain = formData.get("domain");
   const forcedColor = formData.get("color");
   const theme = (formData.get("theme") as "light" | "dark") || "light";
+  const cvLanguage = (formData.get("cvLanguage") as CVLanguage) || "fr";
 
   let color = "005eb8";
   if (typeof forcedColor === "string" && forcedColor.trim()) {
@@ -81,7 +81,14 @@ export async function buildCVHtml(
     color = await ColorService.findBrandColor(domain.trim());
   }
 
-  const html = await renderCV({ cv, photoBase64, color, theme, inlineFonts });
+  const html = await renderCV({
+    cv,
+    photoBase64,
+    color,
+    theme,
+    cvLanguage,
+    inlineFonts,
+  });
   return { html };
 }
 

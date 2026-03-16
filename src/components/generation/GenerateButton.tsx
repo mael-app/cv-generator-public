@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { CVData } from "@/lib/schemas/cv.schema";
 import { CVSettings } from "@/hooks/useCVStore";
+import { useT } from "@/context/LanguageContext";
+import { buildCVFormData } from "@/lib/cv/build-form-data";
 import { Button } from "@/components/ui/button";
 import { FileDown, Loader2, CheckCircle, AlertCircle } from "lucide-react";
 
@@ -21,6 +23,8 @@ export function GenerateButton({
   photoFile,
   photoPreview,
 }: Props) {
+  const { t, lang } = useT();
+  const tg = t.generation;
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -29,30 +33,13 @@ export function GenerateButton({
     setErrorMsg("");
 
     try {
-      const formData = new FormData();
-      formData.append("cv", JSON.stringify(cv));
-
-      // Use photoFile if available, otherwise convert photoPreview to blob
-      if (photoFile) {
-        formData.append("photo", photoFile);
-      } else if (photoPreview) {
-        // Convert data URI to Blob without fetch() to avoid CSP connect-src restriction
-        const [header, b64] = photoPreview.split(",");
-        const mime = header.match(/:(.*?);/)?.[1] ?? "image/jpeg";
-        const binary = atob(b64);
-        const bytes = new Uint8Array(binary.length);
-        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-        formData.append(
-          "photo",
-          new Blob([bytes], { type: mime }),
-          "photo.jpg",
-        );
-      }
-
-      if (settings.domain) formData.append("domain", settings.domain);
-      if (settings.color) formData.append("color", settings.color);
-      formData.append("theme", settings.theme);
-
+      const formData = buildCVFormData(
+        cv,
+        settings,
+        photoFile,
+        photoPreview,
+        lang,
+      );
       const response = await fetch("/api/generate", {
         method: "POST",
         body: formData,
@@ -60,7 +47,7 @@ export function GenerateButton({
 
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
-        throw new Error(data.error || "Generation failed");
+        throw new Error(data.error || tg.generateError);
       }
 
       const blob = await response.blob();
@@ -97,15 +84,15 @@ export function GenerateButton({
         {status === "error" && <AlertCircle className="h-4 w-4 mr-2" />}
         {status === "idle" && <FileDown className="h-4 w-4 mr-2" />}
         {status === "generating"
-          ? "Generating PDF..."
+          ? tg.generating
           : status === "success"
-            ? "Downloaded!"
+            ? tg.downloaded
             : status === "error"
-              ? "Error"
-              : "Generate PDF"}
+              ? tg.error
+              : tg.generate}
       </Button>
       {status === "error" && (
-        <p className="text-xs text-destructive text-center">{errorMsg}</p>
+        <p className="text-xs text-red-500 text-center">{errorMsg}</p>
       )}
     </div>
   );
