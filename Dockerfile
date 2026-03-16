@@ -2,18 +2,17 @@ FROM ghcr.io/puppeteer/puppeteer:24.3.0
 
 USER root
 
-RUN apt-get update && apt-get install -y \
-    wget \
-    --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/*
-
 WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm ci
+# HUSKY=0 — no .git dir in Docker, skip husky install
+RUN HUSKY=0 npm ci
 
 COPY . .
+
+# Disable Next.js anonymous telemetry
+ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN npm run build
 
