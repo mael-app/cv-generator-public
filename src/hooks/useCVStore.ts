@@ -94,6 +94,14 @@ export function useCVStore() {
     setLocalStorage("cv-photo-preview", "");
   }, []);
 
+  const clearAll = useCallback(() => {
+    setCVInternal(DEFAULT_CV);
+    setSettingsInternal(DEFAULT_SETTINGS);
+    setPhotoFile(null);
+    setPhotoPreviewInternal("");
+    setLocalStorage("cv-photo-preview", "");
+  }, []);
+
   return {
     cv,
     setCV,
@@ -104,6 +112,7 @@ export function useCVStore() {
     photoPreview,
     setPhotoPreview,
     clearPhoto,
+    clearAll,
     hydrated,
   };
 }

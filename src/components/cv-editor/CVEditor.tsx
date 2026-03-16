@@ -12,6 +12,7 @@ import { GenerateButton } from "@/components/generation/GenerateButton";
 import { GenerationSettings } from "@/components/generation/GenerationSettings";
 import { ExportButton } from "@/components/import-export/ExportButton";
 import { ImportButton } from "@/components/import-export/ImportButton";
+import { ClearButton } from "@/components/import-export/ClearButton";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function CVEditor() {
@@ -34,6 +35,7 @@ export function CVEditor() {
         <div className="flex gap-2 flex-wrap">
           <ImportButton onImport={store.setCV} />
           <ExportButton cv={store.cv} />
+          <ClearButton onClear={store.clearAll} />
         </div>
       </div>
 
