@@ -1,0 +1,16 @@
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+node_modules
+.next
+out
+output
+scripts
+*.md
+.dockerignore
+Dockerfile
+.husky
+.github
+coverage

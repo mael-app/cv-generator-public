@@ -14,7 +14,10 @@ COPY . .
 # Disable Next.js anonymous telemetry
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN npm run build
+RUN npm run build && chown -R pptruser:pptruser /app
+
+# Drop root privileges before running the app
+USER pptruser
 
 EXPOSE 3000
 
