@@ -9,6 +9,7 @@ interface RenderOptions {
   photoBase64?: string;
   color: string;
   theme: "light" | "dark";
+  inlineFonts?: boolean;
 }
 
 export async function renderCV({
@@ -16,6 +17,7 @@ export async function renderCV({
   photoBase64,
   color,
   theme,
+  inlineFonts = true,
 }: RenderOptions): Promise<string> {
   // Format Links
   const linkedinUrl = cv.header.contact.linkedin.startsWith("http")
@@ -59,6 +61,8 @@ export async function renderCV({
 
   // Replace Google Fonts <link> with inlined @font-face (woff2 as base64)
   // so Puppeteer can render fonts without network access
+  if (!inlineFonts) return htmlContent;
+
   try {
     const fontStyle = await getInlinedFontStyle();
     const replaced = htmlContent.replace(

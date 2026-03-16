@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useCVStore } from "@/hooks/useCVStore";
 import { HeaderSection } from "./HeaderSection";
 import { ExperiencesSection } from "./ExperiencesSection";
@@ -10,6 +11,8 @@ import { LanguagesSection } from "./LanguagesSection";
 import { SoftSkillsSection } from "./SoftSkillsSection";
 import { GenerateButton } from "@/components/generation/GenerateButton";
 import { GenerationSettings } from "@/components/generation/GenerationSettings";
+import { PreviewButton } from "@/components/generation/PreviewButton";
+import { PreviewPanel } from "@/components/generation/PreviewPanel";
 import { ExportButton } from "@/components/import-export/ExportButton";
 import { ImportButton } from "@/components/import-export/ImportButton";
 import { ClearButton } from "@/components/import-export/ClearButton";
@@ -17,6 +20,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export function CVEditor() {
   const store = useCVStore();
+  const [previewHtml, setPreviewHtml] = useState<string | null>(null);
 
   if (!store.hydrated) {
     return (
@@ -92,6 +96,13 @@ export function CVEditor() {
             settings={store.settings}
             onChange={store.setSettings}
           />
+          <PreviewButton
+            cv={store.cv}
+            settings={store.settings}
+            photoFile={store.photoFile}
+            photoPreview={store.photoPreview}
+            onPreview={setPreviewHtml}
+          />
           <GenerateButton
             cv={store.cv}
             settings={store.settings}
@@ -100,6 +111,10 @@ export function CVEditor() {
           />
         </div>
       </div>
+
+      {previewHtml && (
+        <PreviewPanel html={previewHtml} onClose={() => setPreviewHtml(null)} />
+      )}
     </div>
   );
 }
