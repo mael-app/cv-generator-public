@@ -42,23 +42,32 @@ export async function renderCV({
   cvLanguage = "fr",
   inlineFonts = true,
 }: RenderOptions): Promise<string> {
-  // Format Links
-  const linkedinUrl = cv.header.contact.linkedin.startsWith("http")
-    ? cv.header.contact.linkedin
-    : `https://${cv.header.contact.linkedin}`;
-  const githubUrl = cv.header.contact.github.startsWith("http")
-    ? cv.header.contact.github
-    : `https://${cv.header.contact.github}`;
+  // Format Links — produce empty strings for missing values so the
+  // template can use a simple truthiness check to hide the item.
+  const rawLinkedin = cv.header.contact.linkedin.trim();
+  const linkedinUrl = rawLinkedin
+    ? rawLinkedin.startsWith("http")
+      ? rawLinkedin
+      : `https://${rawLinkedin}`
+    : "";
+  const linkedinLabel = rawLinkedin
+    ? rawLinkedin
+        .replace(/(https?:\/\/)?(www\.)?linkedin\.com\/in\//, "")
+        .replace(/\/$/, "")
+        .split("-")
+        .slice(0, 2)
+        .join("-")
+    : "";
 
-  let linkedinLabel = cv.header.contact.linkedin
-    .replace(/(https?:\/\/)?(www\.)?linkedin\.com\/in\//, "")
-    .replace(/\/$/, "");
-  linkedinLabel = linkedinLabel.split("-").slice(0, 2).join("-");
-
-  let githubLabel = cv.header.contact.github
-    .replace(/(https?:\/\/)?(www\.)?github\.com\//, "")
-    .replace(/\/$/, "");
-  githubLabel = `@${githubLabel}`;
+  const rawGithub = cv.header.contact.github.trim();
+  const githubUrl = rawGithub
+    ? rawGithub.startsWith("http")
+      ? rawGithub
+      : `https://${rawGithub}`
+    : "";
+  const githubLabel = rawGithub
+    ? `@${rawGithub.replace(/(https?:\/\/)?(www\.)?github\.com\//, "").replace(/\/$/, "")}`
+    : "";
 
   const mainColor = `#${color.replace("#", "")}`;
 
