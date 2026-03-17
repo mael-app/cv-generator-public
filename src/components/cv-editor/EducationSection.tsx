@@ -1,6 +1,7 @@
 "use client";
 
 import { EducationData } from "@/lib/schemas/cv.schema";
+import { CVValidationErrors } from "@/lib/cv/cv-validation";
 import { useT } from "@/context/LanguageContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,7 @@ import { Plus } from "lucide-react";
 interface Props {
   education: EducationData[];
   onChange: (education: EducationData[]) => void;
+  errors?: CVValidationErrors["education"];
 }
 
 const newEdu = (): EducationData => ({
@@ -22,9 +24,10 @@ const newEdu = (): EducationData => ({
   details: "",
 });
 
-export function EducationSection({ education, onChange }: Props) {
+export function EducationSection({ education, onChange, errors }: Props) {
   const { t } = useT();
   const te = t.editor.education;
+  const tv = t.validation;
 
   const update = (index: number, field: keyof EducationData, value: string) => {
     onChange(
@@ -62,7 +65,15 @@ export function EducationSection({ education, onChange }: Props) {
                 <Input
                   value={edu.degree}
                   onChange={(e) => update(i, "degree", e.target.value)}
+                  className={
+                    errors?.[i]?.degree
+                      ? "border-red-500 focus-visible:ring-red-500"
+                      : ""
+                  }
                 />
+                {errors?.[i]?.degree && (
+                  <p className="text-xs text-red-500">{tv.degreeRequired}</p>
+                )}
               </div>
               <div className="space-y-1.5">
                 <Label>{te.school}</Label>

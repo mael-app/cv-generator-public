@@ -1,6 +1,7 @@
 "use client";
 
 import { HeaderData } from "@/lib/schemas/cv.schema";
+import { CVValidationErrors } from "@/lib/cv/cv-validation";
 import { useT } from "@/context/LanguageContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -13,6 +14,7 @@ interface Props {
   photoPreview: string;
   onPhotoChange: (file: File, preview: string) => void;
   onPhotoClear: () => void;
+  errors?: CVValidationErrors["header"];
 }
 
 export function HeaderSection({
@@ -21,9 +23,11 @@ export function HeaderSection({
   photoPreview,
   onPhotoChange,
   onPhotoClear,
+  errors,
 }: Props) {
   const { t } = useT();
   const th = t.editor.header;
+  const tv = t.validation;
 
   const update = (field: keyof HeaderData, value: string) => {
     onChange({ ...header, [field]: value });
@@ -51,7 +55,13 @@ export function HeaderSection({
               value={header.name}
               onChange={(e) => update("name", e.target.value)}
               placeholder={th.name.placeholder}
+              className={
+                errors?.name ? "border-red-500 focus-visible:ring-red-500" : ""
+              }
             />
+            {errors?.name && (
+              <p className="text-xs text-red-500">{tv.nameRequired}</p>
+            )}
           </div>
           <div className="space-y-1.5">
             <Label>{th.jobTitle.label}</Label>
@@ -90,7 +100,15 @@ export function HeaderSection({
                 onChange={(e) => updateContact("email", e.target.value)}
                 placeholder={th.contact.email.placeholder}
                 type="email"
+                className={
+                  errors?.contact?.email
+                    ? "border-red-500 focus-visible:ring-red-500"
+                    : ""
+                }
               />
+              {errors?.contact?.email && (
+                <p className="text-xs text-red-500">{tv.emailInvalid}</p>
+              )}
             </div>
             <div className="space-y-1.5">
               <Label>{th.contact.phone.label}</Label>

@@ -1,6 +1,7 @@
 "use client";
 
 import { ExperienceData } from "@/lib/schemas/cv.schema";
+import { CVValidationErrors } from "@/lib/cv/cv-validation";
 import { useT } from "@/context/LanguageContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,7 @@ import { Plus, X } from "lucide-react";
 interface Props {
   experiences: ExperienceData[];
   onChange: (experiences: ExperienceData[]) => void;
+  errors?: CVValidationErrors["experiences"];
 }
 
 const newExp = (): ExperienceData => ({
@@ -23,9 +25,10 @@ const newExp = (): ExperienceData => ({
   tasks: [""],
 });
 
-export function ExperiencesSection({ experiences, onChange }: Props) {
+export function ExperiencesSection({ experiences, onChange, errors }: Props) {
   const { t } = useT();
   const te = t.editor.experiences;
+  const tv = t.validation;
 
   const update = (
     index: number,
@@ -67,7 +70,15 @@ export function ExperiencesSection({ experiences, onChange }: Props) {
                 <Input
                   value={exp.role}
                   onChange={(e) => update(i, "role", e.target.value)}
+                  className={
+                    errors?.[i]?.role
+                      ? "border-red-500 focus-visible:ring-red-500"
+                      : ""
+                  }
                 />
+                {errors?.[i]?.role && (
+                  <p className="text-xs text-red-500">{tv.roleRequired}</p>
+                )}
               </div>
               <div className="space-y-1.5">
                 <Label>{te.company}</Label>

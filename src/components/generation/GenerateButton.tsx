@@ -13,6 +13,7 @@ interface Props {
   settings: CVSettings;
   photoFile: File | null;
   photoPreview: string;
+  onValidate?: () => boolean;
 }
 
 type Status = "idle" | "generating" | "success" | "error";
@@ -22,6 +23,7 @@ export function GenerateButton({
   settings,
   photoFile,
   photoPreview,
+  onValidate,
 }: Props) {
   const { t, lang } = useT();
   const tg = t.generation;
@@ -29,6 +31,7 @@ export function GenerateButton({
   const [errorMsg, setErrorMsg] = useState("");
 
   const generate = async () => {
+    if (onValidate && !onValidate()) return;
     setStatus("generating");
     setErrorMsg("");
 
