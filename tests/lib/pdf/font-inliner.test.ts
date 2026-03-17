@@ -15,6 +15,10 @@ describe("getInlinedFontStyle", () => {
   }
 
   function mockFetch(cssMock: string, fontBase64 = "AAAA") {
+    const fontResponse = {
+      ok: true,
+      arrayBuffer: vi.fn().mockResolvedValue(Buffer.from(fontBase64)),
+    };
     global.fetch = vi
       .fn()
       // First call: CSS file
@@ -22,12 +26,9 @@ describe("getInlinedFontStyle", () => {
         ok: true,
         text: vi.fn().mockResolvedValue(cssMock),
         arrayBuffer: vi.fn().mockResolvedValue(Buffer.from(fontBase64)),
-      } as unknown as Response)
+      })
       // Subsequent calls: font binary files
-      .mockResolvedValue({
-        ok: true,
-        arrayBuffer: vi.fn().mockResolvedValue(Buffer.from(fontBase64)),
-      } as unknown as Response);
+      .mockResolvedValue(fontResponse);
   }
 
   it("wraps the inlined CSS in a <style> tag", async () => {
@@ -74,10 +75,7 @@ describe("getInlinedFontStyle", () => {
   });
 
   it("propagates the error when the CSS fetch fails", async () => {
-    global.fetch = vi.fn().mockResolvedValueOnce({
-      ok: false,
-      status: 503,
-    } as unknown as Response);
+    global.fetch = vi.fn().mockResolvedValueOnce({ ok: false, status: 503 });
 
     const getInlinedFontStyle = await importFreshModule();
 

@@ -1,8 +1,17 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import {
-  getLocalStorage,
-  setLocalStorage,
-} from "@/lib/storage/local-storage";
+import { getLocalStorage, setLocalStorage } from "@/lib/storage/local-storage";
+
+/** Runs a callback in an environment where `window` is undefined (simulates SSR). */
+function withoutWindow(fn: () => void): void {
+  const original = globalThis.window;
+  // @ts-expect-error simulate SSR environment
+  delete globalThis.window;
+  try {
+    fn();
+  } finally {
+    globalThis.window = original;
+  }
+}
 
 describe("getLocalStorage", () => {
   beforeEach(() => {
@@ -33,15 +42,9 @@ describe("getLocalStorage", () => {
   });
 
   it("returns the default value when window is undefined (SSR)", () => {
-    const original = globalThis.window;
-    // @ts-expect-error simulate SSR
-    delete globalThis.window;
-    try {
-      const result = getLocalStorage("any-key", "ssr-default");
-      expect(result).toBe("ssr-default");
-    } finally {
-      globalThis.window = original;
-    }
+    withoutWindow(() => {
+      expect(getLocalStorage("any-key", "ssr-default")).toBe("ssr-default");
+    });
   });
 });
 
@@ -59,7 +62,10 @@ describe("setLocalStorage", () => {
   it("writes an object that can be read back correctly", () => {
     const data = { name: "Alice", age: 30 };
     setLocalStorage("obj-key", data);
-    const result = getLocalStorage<typeof data>("obj-key", { name: "", age: 0 });
+    const result = getLocalStorage<typeof data>("obj-key", {
+      name: "",
+      age: 0,
+    });
     expect(result).toEqual(data);
   });
 
@@ -78,14 +84,9 @@ describe("setLocalStorage", () => {
   });
 
   it("is a no-op when window is undefined (SSR)", () => {
-    const original = globalThis.window;
-    // @ts-expect-error simulate SSR
-    delete globalThis.window;
-    try {
+    withoutWindow(() => {
       expect(() => setLocalStorage("any-key", "value")).not.toThrow();
-    } finally {
-      globalThis.window = original;
-    }
+    });
   });
 
   it("silently ignores storage errors (e.g. quota exceeded)", () => {

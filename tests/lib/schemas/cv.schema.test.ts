@@ -56,6 +56,12 @@ const validCV = {
   softSkills: ["Team player"],
 };
 
+function omitKey<T extends object>(obj: T, key: keyof T): Partial<T> {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([k]) => k !== key),
+  ) as Partial<T>;
+}
+
 describe("ContactSchema", () => {
   it("validates a valid contact object", () => {
     expect(ContactSchema.safeParse(validContact).success).toBe(true);
@@ -70,10 +76,9 @@ describe("ContactSchema", () => {
   });
 
   it("rejects missing email field", () => {
-    const rest = Object.fromEntries(
-      Object.entries(validContact).filter(([k]) => k !== "email"),
-    );
-    expect(ContactSchema.safeParse(rest).success).toBe(false);
+    expect(
+      ContactSchema.safeParse(omitKey(validContact, "email")).success,
+    ).toBe(false);
   });
 });
 
@@ -83,17 +88,15 @@ describe("HeaderSchema", () => {
   });
 
   it("rejects missing name", () => {
-    const rest = Object.fromEntries(
-      Object.entries(validHeader).filter(([k]) => k !== "name"),
+    expect(HeaderSchema.safeParse(omitKey(validHeader, "name")).success).toBe(
+      false,
     );
-    expect(HeaderSchema.safeParse(rest).success).toBe(false);
   });
 
   it("rejects missing contact", () => {
-    const rest = Object.fromEntries(
-      Object.entries(validHeader).filter(([k]) => k !== "contact"),
-    );
-    expect(HeaderSchema.safeParse(rest).success).toBe(false);
+    expect(
+      HeaderSchema.safeParse(omitKey(validHeader, "contact")).success,
+    ).toBe(false);
   });
 });
 
@@ -121,10 +124,10 @@ describe("ProjectSchema", () => {
   });
 
   it("rejects missing description", () => {
-    const rest = Object.fromEntries(
-      Object.entries(validCV.projects[0]).filter(([k]) => k !== "description"),
-    );
-    expect(ProjectSchema.safeParse(rest).success).toBe(false);
+    expect(
+      ProjectSchema.safeParse(omitKey(validCV.projects[0], "description"))
+        .success,
+    ).toBe(false);
   });
 });
 
@@ -134,16 +137,18 @@ describe("EducationSchema", () => {
   });
 
   it("rejects missing degree", () => {
-    const rest = Object.fromEntries(
-      Object.entries(validCV.education[0]).filter(([k]) => k !== "degree"),
-    );
-    expect(EducationSchema.safeParse(rest).success).toBe(false);
+    expect(
+      EducationSchema.safeParse(omitKey(validCV.education[0], "degree"))
+        .success,
+    ).toBe(false);
   });
 });
 
 describe("LanguageSchema", () => {
   it("validates a valid language entry", () => {
-    expect(LanguageSchema.safeParse({ name: "English", level: "C2" }).success).toBe(true);
+    expect(
+      LanguageSchema.safeParse({ name: "English", level: "C2" }).success,
+    ).toBe(true);
   });
 
   it("rejects missing level", () => {
@@ -171,24 +176,17 @@ describe("CVSchema", () => {
   });
 
   it("rejects missing header", () => {
-    const rest = Object.fromEntries(
-      Object.entries(validCV).filter(([k]) => k !== "header"),
-    );
-    expect(CVSchema.safeParse(rest).success).toBe(false);
+    expect(CVSchema.safeParse(omitKey(validCV, "header")).success).toBe(false);
   });
 
   it("rejects missing experiences field", () => {
-    const rest = Object.fromEntries(
-      Object.entries(validCV).filter(([k]) => k !== "experiences"),
+    expect(CVSchema.safeParse(omitKey(validCV, "experiences")).success).toBe(
+      false,
     );
-    expect(CVSchema.safeParse(rest).success).toBe(false);
   });
 
   it("rejects missing skills field", () => {
-    const rest = Object.fromEntries(
-      Object.entries(validCV).filter(([k]) => k !== "skills"),
-    );
-    expect(CVSchema.safeParse(rest).success).toBe(false);
+    expect(CVSchema.safeParse(omitKey(validCV, "skills")).success).toBe(false);
   });
 
   it("rejects invalid email in contact within header", () => {
