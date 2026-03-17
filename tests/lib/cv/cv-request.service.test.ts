@@ -20,13 +20,28 @@ vi.mock("@/lib/color/color.service", () => ({
   },
 }));
 
-import { buildCVHtml, isError } from "@/lib/cv/cv-request.service";
+import {
+  buildCVHtml,
+  isError,
+  type CVRequestError,
+  type CVRequestResult,
+} from "@/lib/cv/cv-request.service";
 import { renderCV } from "@/lib/pdf/renderer";
 import { ColorService } from "@/lib/color/color.service";
 import { MAX_PHOTO_SIZE } from "@/lib/cv/constants";
 
 const mockRenderCV = vi.mocked(renderCV);
 const mockFindBrandColor = vi.mocked(ColorService.findBrandColor);
+
+/** Shape of the NextResponse mock returned by the mocked next/server */
+type MockResponse = { status: number };
+
+/** Asserts the result is an error and returns its HTTP status code. */
+function getErrorStatus(result: CVRequestResult | CVRequestError): number {
+  expect(isError(result)).toBe(true);
+  return ((result as CVRequestError).response as unknown as MockResponse)
+    .status;
+}
 
 const validCVData = {
   header: {
@@ -69,52 +84,29 @@ describe("buildCVHtml", () => {
   // ── Error cases ──────────────────────────────────────────────────────────
 
   it("returns a 400 error response when the cv field is absent", async () => {
-    const fd = new FormData();
-    const result = await buildCVHtml(fd, false);
-    expect(isError(result)).toBe(true);
-    if (isError(result)) {
-      expect((result.response as unknown as { status: number }).status).toBe(
-        400,
-      );
-    }
+    const result = await buildCVHtml(new FormData(), false);
+    expect(getErrorStatus(result)).toBe(400);
   });
 
   it("returns a 400 error response when the cv field is not a string", async () => {
-    // FormData.get() returning a File would not be a string
     const fd = new FormData();
-    const file = new File(["{}"], "cv.json", { type: "application/json" });
-    fd.append("cv", file);
+    fd.append("cv", new File(["{}"], "cv.json", { type: "application/json" }));
     const result = await buildCVHtml(fd, false);
-    expect(isError(result)).toBe(true);
-    if (isError(result)) {
-      expect((result.response as unknown as { status: number }).status).toBe(
-        400,
-      );
-    }
+    expect(getErrorStatus(result)).toBe(400);
   });
 
   it("returns a 400 error response when the cv field contains invalid JSON", async () => {
     const fd = new FormData();
     fd.append("cv", "{ not json }");
     const result = await buildCVHtml(fd, false);
-    expect(isError(result)).toBe(true);
-    if (isError(result)) {
-      expect((result.response as unknown as { status: number }).status).toBe(
-        400,
-      );
-    }
+    expect(getErrorStatus(result)).toBe(400);
   });
 
   it("returns a 400 error response when the CV data fails schema validation", async () => {
     const fd = new FormData();
     fd.append("cv", JSON.stringify({ header: { name: "Only Name" } }));
     const result = await buildCVHtml(fd, false);
-    expect(isError(result)).toBe(true);
-    if (isError(result)) {
-      expect((result.response as unknown as { status: number }).status).toBe(
-        400,
-      );
-    }
+    expect(getErrorStatus(result)).toBe(400);
   });
 
   it("returns a 413 error response when the photo exceeds MAX_PHOTO_SIZE", async () => {
@@ -122,14 +114,8 @@ describe("buildCVHtml", () => {
     const file = new File([largeBuffer], "photo.jpg", { type: "image/jpeg" });
     const fd = makeFormData();
     fd.append("photo", file);
-
     const result = await buildCVHtml(fd, false);
-    expect(isError(result)).toBe(true);
-    if (isError(result)) {
-      expect((result.response as unknown as { status: number }).status).toBe(
-        413,
-      );
-    }
+    expect(getErrorStatus(result)).toBe(413);
   });
 
   // ── Happy-path cases ──────────────────────────────────────────────────────
@@ -137,9 +123,7 @@ describe("buildCVHtml", () => {
   it("returns html on success with no photo and no domain", async () => {
     const result = await buildCVHtml(makeFormData(), false);
     expect(isError(result)).toBe(false);
-    if (!isError(result)) {
-      expect(result.html).toBe("<html>CV</html>");
-    }
+    expect((result as CVRequestResult).html).toBe("<html>CV</html>");
   });
 
   it("passes base64-encoded photo data to renderCV", async () => {
@@ -148,42 +132,36 @@ describe("buildCVHtml", () => {
     const fd = makeFormData();
     fd.append("photo", file);
 
-    const result = await buildCVHtml(fd, false);
-    expect(isError(result)).toBe(false);
+    await buildCVHtml(fd, false);
 
     const call = mockRenderCV.mock.calls[0][0];
     expect(call.photoBase64).toMatch(/^data:image\/jpeg;base64,/);
   });
 
   it("uses the forced color when provided instead of domain lookup", async () => {
-    const fd = makeFormData({ color: "ff0000", domain: "example.com" });
-    await buildCVHtml(fd, false);
+    await buildCVHtml(
+      makeFormData({ color: "ff0000", domain: "example.com" }),
+      false,
+    );
 
     expect(mockFindBrandColor).not.toHaveBeenCalled();
-    const call = mockRenderCV.mock.calls[0][0];
-    expect(call.color).toBe("ff0000");
+    expect(mockRenderCV.mock.calls[0][0].color).toBe("ff0000");
   });
 
   it("extracts the brand color from the domain when no forced color is given", async () => {
-    const fd = makeFormData({ domain: "github.com" });
-    await buildCVHtml(fd, false);
+    await buildCVHtml(makeFormData({ domain: "github.com" }), false);
 
     expect(mockFindBrandColor).toHaveBeenCalledWith("github.com");
-    const call = mockRenderCV.mock.calls[0][0];
-    expect(call.color).toBe("#336699");
+    expect(mockRenderCV.mock.calls[0][0].color).toBe("#336699");
   });
 
   it("falls back to the default color when neither forced color nor domain is provided", async () => {
-    const result = await buildCVHtml(makeFormData(), false);
-    expect(isError(result)).toBe(false);
-
-    const call = mockRenderCV.mock.calls[0][0];
-    expect(call.color).toBe("005eb8");
+    await buildCVHtml(makeFormData(), false);
+    expect(mockRenderCV.mock.calls[0][0].color).toBe("005eb8");
   });
 
   it("passes the theme and cvLanguage from FormData to renderCV", async () => {
-    const fd = makeFormData({ theme: "dark", cvLanguage: "en" });
-    await buildCVHtml(fd, false);
+    await buildCVHtml(makeFormData({ theme: "dark", cvLanguage: "en" }), false);
 
     const call = mockRenderCV.mock.calls[0][0];
     expect(call.theme).toBe("dark");
@@ -206,12 +184,10 @@ describe("buildCVHtml", () => {
 
 describe("isError", () => {
   it("returns true for an error result", () => {
-    const errorResult = { response: {} };
-    expect(isError(errorResult as never)).toBe(true);
+    expect(isError({ response: {} } as never)).toBe(true);
   });
 
   it("returns false for a success result", () => {
-    const successResult = { html: "<html/>" };
-    expect(isError(successResult)).toBe(false);
+    expect(isError({ html: "<html/>" })).toBe(false);
   });
 });
