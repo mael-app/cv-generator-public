@@ -3,6 +3,16 @@
 import { useState } from "react";
 import { useCVStore } from "@/hooks/useCVStore";
 import { useT } from "@/context/LanguageContext";
+import {
+  validateCVEssentials,
+  hasValidationErrors,
+  CVValidationErrors,
+} from "@/lib/cv/cv-validation";
+import {
+  HeaderData,
+  ExperienceData,
+  EducationData,
+} from "@/lib/schemas/cv.schema";
 import { HeaderSection } from "./HeaderSection";
 import { ExperiencesSection } from "./ExperiencesSection";
 import { ProjectsSection } from "./ProjectsSection";
@@ -23,6 +33,30 @@ export function CVEditor() {
   const store = useCVStore();
   const { t } = useT();
   const [previewHtml, setPreviewHtml] = useState<string | null>(null);
+  const [validationErrors, setValidationErrors] = useState<CVValidationErrors>(
+    {},
+  );
+
+  const validate = (): boolean => {
+    const errors = validateCVEssentials(store.cv);
+    setValidationErrors(errors);
+    return !hasValidationErrors(errors);
+  };
+
+  const handleHeaderChange = (header: HeaderData) => {
+    store.setCV((prev) => ({ ...prev, header }));
+    setValidationErrors((prev) => ({ ...prev, header: undefined }));
+  };
+
+  const handleExperiencesChange = (experiences: ExperienceData[]) => {
+    store.setCV((prev) => ({ ...prev, experiences }));
+    setValidationErrors((prev) => ({ ...prev, experiences: undefined }));
+  };
+
+  const handleEducationChange = (education: EducationData[]) => {
+    store.setCV((prev) => ({ ...prev, education }));
+    setValidationErrors((prev) => ({ ...prev, education: undefined }));
+  };
 
   if (!store.hydrated) {
     return (
@@ -49,19 +83,19 @@ export function CVEditor() {
         <div className="lg:col-span-2 xl:col-span-3 space-y-6 min-w-0">
           <HeaderSection
             header={store.cv.header}
-            onChange={(header) => store.setCV((prev) => ({ ...prev, header }))}
+            onChange={handleHeaderChange}
             photoPreview={store.photoPreview}
             onPhotoChange={(file, preview) => {
               store.setPhotoFile(file);
               store.setPhotoPreview(preview);
             }}
             onPhotoClear={store.clearPhoto}
+            errors={validationErrors.header}
           />
           <ExperiencesSection
             experiences={store.cv.experiences}
-            onChange={(experiences) =>
-              store.setCV((prev) => ({ ...prev, experiences }))
-            }
+            onChange={handleExperiencesChange}
+            errors={validationErrors.experiences}
           />
           <ProjectsSection
             projects={store.cv.projects}
@@ -71,9 +105,8 @@ export function CVEditor() {
           />
           <EducationSection
             education={store.cv.education}
-            onChange={(education) =>
-              store.setCV((prev) => ({ ...prev, education }))
-            }
+            onChange={handleEducationChange}
+            errors={validationErrors.education}
           />
           <SkillsSection
             skills={store.cv.skills}
@@ -104,12 +137,14 @@ export function CVEditor() {
             photoFile={store.photoFile}
             photoPreview={store.photoPreview}
             onPreview={setPreviewHtml}
+            onValidate={validate}
           />
           <GenerateButton
             cv={store.cv}
             settings={store.settings}
             photoFile={store.photoFile}
             photoPreview={store.photoPreview}
+            onValidate={validate}
           />
         </div>
       </div>

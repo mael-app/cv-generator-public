@@ -14,6 +14,7 @@ interface Props {
   photoFile: File | null;
   photoPreview: string;
   onPreview: (html: string) => void;
+  onValidate?: () => boolean;
 }
 
 export function PreviewButton({
@@ -22,6 +23,7 @@ export function PreviewButton({
   photoFile,
   photoPreview,
   onPreview,
+  onValidate,
 }: Props) {
   const { t, lang } = useT();
   const tg = t.generation;
@@ -29,6 +31,7 @@ export function PreviewButton({
   const [error, setError] = useState(false);
 
   const preview = async () => {
+    if (onValidate && !onValidate()) return;
     setLoading(true);
     setError(false);
     try {

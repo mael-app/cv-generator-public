@@ -87,6 +87,13 @@ const en = {
     },
   },
 
+  validation: {
+    nameRequired: "Full name is required",
+    emailInvalid: "A valid email address is required",
+    roleRequired: "Role is required",
+    degreeRequired: "Degree is required",
+  },
+
   generation: {
     title: "Generation Settings",
     domain: {

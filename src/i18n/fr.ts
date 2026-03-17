@@ -90,6 +90,13 @@ const fr = {
     },
   },
 
+  validation: {
+    nameRequired: "Le nom complet est requis",
+    emailInvalid: "Une adresse email valide est requise",
+    roleRequired: "Le poste est requis",
+    degreeRequired: "Le diplôme est requis",
+  },
+
   generation: {
     title: "Paramètres de génération",
     domain: {
