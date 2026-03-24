@@ -47,3 +47,5 @@ Thumbs.db
 # Development
 .gemini/
 gha-creds-*.json
+.vercel
+.env*.local

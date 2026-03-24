@@ -7,7 +7,7 @@ import { DevUsageDialog } from "./DevUsageDialog";
 import { LanguageToggle } from "./LanguageToggle";
 import { FileText } from "lucide-react";
 
-export function Navbar() {
+export function Navbar({ showApiUsage }: { showApiUsage: boolean }) {
   const { t } = useT();
 
   return (
@@ -18,7 +18,7 @@ export function Navbar() {
           {t.nav.brand}
         </Link>
         <div className="flex items-center gap-2">
-          <DevUsageDialog />
+          {showApiUsage && <DevUsageDialog />}
           <LanguageToggle />
           <ThemeToggle />
         </div>
