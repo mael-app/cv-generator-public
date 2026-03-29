@@ -25,7 +25,25 @@ npm install
 npm run dev
 ```
 
-Open **http://localhost:3000**, fill in your details, and click **Generate PDF**.
+### Local PDF prerequisites
+
+PDF generation needs a Chrome binary available to Puppeteer.
+
+If you use npm:
+
+```bash
+npx puppeteer browsers install chrome
+```
+
+If you use pnpm:
+
+```bash
+pnpm exec puppeteer browsers install chrome
+```
+
+Then restart the dev server.
+
+Open **<http://localhost:3000>**, fill in your details, and click **Generate PDF**.
 
 ## API usage
 
@@ -55,6 +73,22 @@ curl -X POST http://localhost:3000/api/generate \
 ```bash
 docker build -t cv-generator-public .
 docker run -p 3000:3000 cv-generator-public
+```
+
+## Troubleshooting
+
+### Error: Could not find Chrome (ver. ...)
+
+Install the browser binary required by Puppeteer:
+
+```bash
+npx puppeteer browsers install chrome
+```
+
+or with pnpm:
+
+```bash
+pnpm exec puppeteer browsers install chrome
 ```
 
 ## Scripts
