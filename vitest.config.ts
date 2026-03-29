@@ -1,11 +1,16 @@
 import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
 import path from "path";
+import os from "node:os";
 
 export default defineConfig({
   plugins: [react()],
   test: {
     environment: "jsdom",
+    execArgv: [
+      "--localstorage-file",
+      path.resolve(os.tmpdir(), `vitest-${process.pid}.localstorage`),
+    ],
     globals: true,
     setupFiles: ["./tests/setup.ts"],
     include: ["tests/**/*.test.ts"],
