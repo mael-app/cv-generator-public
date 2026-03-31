@@ -25,6 +25,8 @@ const CV_LABELS: Record<CVLanguage, Record<string, string>> = {
   },
 };
 
+export type CvTemplate = "modern" | "classic" | "simple";
+
 interface RenderOptions {
   cv: CVData;
   photoBase64?: string;
@@ -32,6 +34,7 @@ interface RenderOptions {
   theme: "light" | "dark";
   cvLanguage?: CVLanguage;
   inlineFonts?: boolean;
+  cvTemplate?: CvTemplate;
 }
 
 export async function renderCV({
@@ -41,6 +44,7 @@ export async function renderCV({
   theme,
   cvLanguage = "fr",
   inlineFonts = true,
+  cvTemplate = "modern",
 }: RenderOptions): Promise<string> {
   // Format Links — produce empty strings for missing values so the
   // template can use a simple truthiness check to hide the item.
@@ -91,7 +95,21 @@ export async function renderCV({
     theme,
   };
 
-  const templatePath = path.join(process.cwd(), "src/views/cv.ejs");
+  let cvTemplateFile: string;
+  switch (cvTemplate) {
+    case "classic":
+      cvTemplateFile = "classic.ejs";
+      break;
+    case "simple":
+      cvTemplateFile = "simple.ejs";
+      break;
+    case "modern":
+    default:
+      cvTemplateFile = "modern.ejs";
+      break;
+  }
+
+  const templatePath = path.join(process.cwd(), `src/views/${cvTemplateFile}`);
   let htmlContent = (await ejs.renderFile(templatePath, viewData)) as string;
 
   // Replace Google Fonts <link> with inlined @font-face (woff2 as base64)

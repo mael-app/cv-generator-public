@@ -1,6 +1,6 @@
 import { CVSchema, CVData } from "@/lib/schemas/cv.schema";
 import { ColorService } from "@/lib/color/color.service";
-import { renderCV, CVLanguage } from "@/lib/pdf/renderer";
+import { renderCV, CVLanguage, CvTemplate } from "@/lib/pdf/renderer";
 import { MAX_PHOTO_SIZE } from "@/lib/cv/constants";
 import { NextResponse } from "next/server";
 
@@ -73,6 +73,7 @@ export async function buildCVHtml(
   const forcedColor = formData.get("color");
   const theme = (formData.get("theme") as "light" | "dark") || "light";
   const cvLanguage = (formData.get("cvLanguage") as CVLanguage) || "fr";
+  const cvTemplate = (formData.get("cvTemplate") as CvTemplate) || "modern";
 
   let color = "005eb8";
   if (typeof forcedColor === "string" && forcedColor.trim()) {
@@ -88,6 +89,7 @@ export async function buildCVHtml(
     theme,
     cvLanguage,
     inlineFonts,
+    cvTemplate,
   });
   return { html };
 }

@@ -34,6 +34,7 @@ export function buildCVFormData(
     "cvLanguage",
     settings.cvLanguage === "auto" ? uiLang : settings.cvLanguage,
   );
+  formData.append("cvTemplate", settings.cvTemplate);
 
   return formData;
 }

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Source+Sans+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --text-dark: #2b2b2b;
+            --text-gray: #4a4a4a;
+            --text-light: #7a7a7a;
+            --line-color: #d1d1d1;
+            --bg-body: #fdfdfd;
+            --footer-bg: #6b6b6b;
+            /* La couleur principale peut être subtilement utilisée pour les liens ou laissée grise */
+            --primary: <%=mainColor %>; 
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            color: var(--text-gray);
+            background: #e5e7eb; /* Fond hors du CV */
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            background: var(--bg-body);
+            /* margin: 20px auto; */
+            position: relative;
+            padding: 50px 60px 70px 60px; /* Padding bas plus grand pour la barre grise */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* --- HEADER --- */
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-gray);
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            font-size: 12px;
+            color: var(--text-light);
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--line-color);
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .contact-item svg {
+            color: var(--text-dark);
+        }
+
+        /* --- SECTIONS --- */
+        section {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--line-color);
+        }
+
+        /* Enlever la bordure de la dernière section pour que ça soit propre */
+        section:last-of-type {
+            border-bottom: none;
+        }
+
+        h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+        }
+
+        p.description, .about-text {
+            font-size: 13px;
+            color: var(--text-gray);
+            text-align: justify;
+        }
+
+        /* --- BLOCS D'EXPÉRIENCE ET ÉDUCATION --- */
+        .item-block {
+            margin-bottom: 15px;
+        }
+        
+        .item-block:last-child {
+            margin-bottom: 0;
+        }
+
+        .item-meta {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-bottom: 2px;
+        }
+
+        .item-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        /* --- COMPÉTENCES (SKILLS) --- */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .skills-grid li {
+            font-size: 13px;
+            color: var(--text-gray);
+            position: relative;
+            padding-left: 12px;
+        }
+
+        .skills-grid li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--text-dark);
+            font-weight: bold;
+        }
+
+        /* --- FOOTER GRIS --- */
+        .footer-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 25px;
+            background-color: var(--footer-bg);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+        <header>
+            <h1><%= header.name %></h1>
+            <div class="subtitle"><%= header.title %></div>
+            
+            <div class="contact-info">
+                <% if (header.contact.phone) { %>
+                <span class="contact-item">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.15 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.06 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    <%= header.contact.phone %>
+                </span>
+                <% } %>
+
+                <% if (header.contact.email) { %>
+                <span class="contact-item">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                    <a href="mailto:<%= header.contact.email %>"><%= header.contact.email %></a>
+                </span>
+                <% } %>
+
+                <% if (header.contact.location) { %>
+                <span class="contact-item">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                    <%= header.contact.location %>
+                </span>
+                <% } %>
+            </div>
+        </header>
+
+        <% if (header.jobSearchGoal) { %>
+        <section>
+            <h2><%= labels.aboutMe || "ABOUT ME" %></h2>
+            <p class="about-text"><%= header.jobSearchGoal %></p>
+        </section>
+        <% } %>
+
+        <% if (education && education.length > 0) { %>
+        <section>
+            <h2><%= labels.education || "EDUCATION" %></h2>
+            <% education.forEach(function(edu) { %>
+                <div class="item-block">
+                    <div class="item-meta"><%= edu.school %> | <%= edu.date %></div>
+                    <div class="item-title"><%= edu.degree %></div>
+                    <% if (edu.details) { %>
+                        <p class="description"><%= edu.details %></p>
+                    <% } %>
+                </div>
+            <% }); %>
+        </section>
+        <% } %>
+
+        <% if (experiences && experiences.length > 0) { %>
+        <section>
+            <h2><%= labels.experiences || "WORK EXPERIENCE" %></h2>
+            <% experiences.forEach(function(exp) { %>
+                <div class="item-block">
+                    <div class="item-meta"><%= exp.company %> | <%= exp.date %></div>
+                    <div class="item-title"><%= exp.role %></div>
+                    <% if (exp.description) { %>
+                        <p class="description"><%= exp.description %></p>
+                    <% } %>
+                    <% if (exp.tasks && exp.tasks.length > 0) { %>
+                        <ul style="margin-top: 5px;">
+                            <% exp.tasks.forEach(function(task) { %>
+                                <li class="description" style="margin-left: 15px; list-style-type: disc;"><%= task %></li>
+                            <% }); %>
+                        </ul>
+                    <% } %>
+                </div>
+            <% }); %>
+        </section>
+        <% } %>
+
+        <% if (skills && skills.length > 0) { %>
+        <section>
+            <h2><%= labels.hardSkills || "SKILLS" %></h2>
+            <ul class="skills-grid">
+                <% skills.forEach(function(skill) { %>
+                    <li><%= skill %></li>
+                <% }); %>
+            </ul>
+        </section>
+        <% } %>
+    </div>
+</body>
+</html>

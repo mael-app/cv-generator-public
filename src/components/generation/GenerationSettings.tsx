@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ColorPreview } from "./ColorPreview";
+import { CvTemplate } from "@/lib/pdf/renderer";
 
 interface Props {
   settings: CVSettings;
@@ -97,6 +98,26 @@ export function GenerationSettings({ settings, onChange }: Props) {
               {tg.cvLanguage.options.map(({ value, flag, label }) => (
                 <SelectItem key={value} value={value}>
                   {flag} {label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-1.5">
+          <Label>{tg.cvTemplate.label}</Label>
+          <Select
+            value={settings.cvTemplate}
+            onValueChange={(v) =>
+              onChange({ ...settings, cvTemplate: v as CvTemplate })
+            }
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {tg.cvTemplate.options.map(({ value, label }) => (
+                <SelectItem key={value} value={value}>
+                  {label}
                 </SelectItem>
               ))}
             </SelectContent>

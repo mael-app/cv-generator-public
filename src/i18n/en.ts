@@ -112,6 +112,14 @@ const en = {
         { value: "en", flag: "🇬🇧", label: "English" },
       ],
     },
+    cvTemplate: {
+      label: "CV Template",
+      options: [
+        { value: "modern", label: "Modern" },
+        { value: "classic", label: "Classic" },
+        { value: "simple", label: "Simple" },
+      ],
+    },
     detecting: "Detecting...",
     preview: "Preview",
     previewLoading: "Loading preview...",

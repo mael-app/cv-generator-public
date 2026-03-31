@@ -115,6 +115,14 @@ const fr = {
         { value: "en", flag: "🇬🇧", label: "English" },
       ],
     },
+    cvTemplate: {
+      label: "Modèle de CV",
+      options: [
+        { value: "modern", label: "Moderne" },
+        { value: "classic", label: "Classique" },
+        { value: "simple", label: "Simple" },
+      ],
+    },
     detecting: "Détection...",
     preview: "Aperçu",
     previewLoading: "Chargement...",
