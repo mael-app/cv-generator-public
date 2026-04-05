@@ -52,6 +52,8 @@ function TemplateThumbnail({
         alt={`Preview of ${template} template`}
         className="w-full h-full object-cover object-top"
         loading="lazy"
+        width={400}
+        height={565}
       />
     </div>
   );
