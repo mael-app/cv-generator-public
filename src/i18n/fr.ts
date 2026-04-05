@@ -126,7 +126,7 @@ const fr = {
         { value: "modern", label: "Moderne" },
         { value: "classic", label: "Classique" },
         { value: "simple", label: "Simple" },
-        { value: "executive", label: "Executif" },
+        { value: "executive", label: "Exécutif" },
         { value: "timeline", label: "Chronologique" },
         { value: "minimal", label: "Minimal" },
         { value: "split", label: "Scinde" },
