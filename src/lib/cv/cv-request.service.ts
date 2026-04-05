@@ -68,6 +68,20 @@ export async function buildCVHtml(
     photoBase64 = `data:${mime};base64,${buffer.toString("base64")}`;
   }
 
+  if (typeof photoFile === "string") {
+    // If it's a string, we expect it to be a base64 data URL
+    if (photoFile.startsWith("data:image/")) {
+      photoBase64 = photoFile;
+    } else {
+      return {
+        response: NextResponse.json(
+          { error: "Invalid photo format" },
+          { status: 400 },
+        ),
+      };
+    }
+  }
+
   // Resolve color
   const domain = formData.get("domain");
   const forcedColor = formData.get("color");

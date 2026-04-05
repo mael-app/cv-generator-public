@@ -11,7 +11,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "prepare": "husky"
+    "prepare": "husky",
+    "previews": "node scripts/generate-previews.mjs"
   },
   "dependencies": {
     "@flags-sdk/vercel": "^1.2.1",

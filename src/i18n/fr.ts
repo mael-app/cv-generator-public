@@ -117,10 +117,22 @@ const fr = {
     },
     cvTemplate: {
       label: "Modèle de CV",
+      current: "Modèle actuel",
+      openGallery: "Ouvrir la galerie des modèles",
+      galleryTitle: "Choisir un modèle",
+      galleryHint:
+        "Sélectionnez le style qui correspond le mieux à votre profil.",
       options: [
         { value: "modern", label: "Moderne" },
         { value: "classic", label: "Classique" },
         { value: "simple", label: "Simple" },
+        { value: "executive", label: "Executif" },
+        { value: "timeline", label: "Chronologique" },
+        { value: "minimal", label: "Minimal" },
+        { value: "split", label: "Scinde" },
+        { value: "focus", label: "Focus" },
+        { value: "slate", label: "Ardoise" },
+        { value: "onepage", label: "Une page" },
       ],
     },
     detecting: "Détection...",

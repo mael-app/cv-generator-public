@@ -25,7 +25,17 @@ const CV_LABELS: Record<CVLanguage, Record<string, string>> = {
   },
 };
 
-export type CvTemplate = "modern" | "classic" | "simple";
+export type CvTemplate =
+  | "modern"
+  | "classic"
+  | "simple"
+  | "executive"
+  | "timeline"
+  | "minimal"
+  | "split"
+  | "focus"
+  | "slate"
+  | "onepage";
 
 interface RenderOptions {
   cv: CVData;
@@ -95,19 +105,7 @@ export async function renderCV({
     theme,
   };
 
-  let cvTemplateFile: string;
-  switch (cvTemplate) {
-    case "classic":
-      cvTemplateFile = "classic.ejs";
-      break;
-    case "simple":
-      cvTemplateFile = "simple.ejs";
-      break;
-    case "modern":
-    default:
-      cvTemplateFile = "modern.ejs";
-      break;
-  }
+  const cvTemplateFile = `${cvTemplate}.ejs`;
 
   const templatePath = path.join(process.cwd(), `src/views/${cvTemplateFile}`);
   let htmlContent = (await ejs.renderFile(templatePath, viewData)) as string;
