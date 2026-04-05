@@ -129,7 +129,7 @@ const fr = {
         { value: "executive", label: "Exécutif" },
         { value: "timeline", label: "Chronologique" },
         { value: "minimal", label: "Minimal" },
-        { value: "split", label: "Scinde" },
+        { value: "split", label: "Scindé" },
         { value: "focus", label: "Focus" },
         { value: "slate", label: "Ardoise" },
         { value: "onepage", label: "Une page" },
