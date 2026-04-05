@@ -1,6 +1,11 @@
 import { CVSchema, CVData } from "@/lib/schemas/cv.schema";
 import { ColorService } from "@/lib/color/color.service";
-import { renderCV, CVLanguage, CvTemplate } from "@/lib/pdf/renderer";
+import {
+  renderCV,
+  CVLanguage,
+  CvTemplate,
+  isCvTemplate,
+} from "@/lib/pdf/renderer";
 import { MAX_PHOTO_SIZE } from "@/lib/cv/constants";
 import { NextResponse } from "next/server";
 
@@ -69,6 +74,15 @@ export async function buildCVHtml(
   }
 
   if (typeof photoFile === "string") {
+    if (photoFile.length > MAX_PHOTO_SIZE * 1.37) {
+      return {
+        response: NextResponse.json(
+          { error: "Photo too large (max 5MB)" },
+          { status: 413 },
+        ),
+      };
+    }
+
     // If it's a string, we expect it to be a base64 data URL
     if (photoFile.startsWith("data:image/")) {
       photoBase64 = photoFile;
@@ -87,7 +101,21 @@ export async function buildCVHtml(
   const forcedColor = formData.get("color");
   const theme = (formData.get("theme") as "light" | "dark") || "light";
   const cvLanguage = (formData.get("cvLanguage") as CVLanguage) || "fr";
-  const cvTemplate = (formData.get("cvTemplate") as CvTemplate) || "modern";
+  const cvTemplateRaw = formData.get("cvTemplate");
+  if (
+    cvTemplateRaw != null &&
+    cvTemplateRaw !== "" &&
+    !isCvTemplate(cvTemplateRaw)
+  ) {
+    return {
+      response: NextResponse.json(
+        { error: "Invalid cvTemplate value" },
+        { status: 400 },
+      ),
+    };
+  }
+  const cvTemplate: CvTemplate =
+    cvTemplateRaw == null || cvTemplateRaw === "" ? "modern" : cvTemplateRaw;
 
   let color = "005eb8";
   if (typeof forcedColor === "string" && forcedColor.trim()) {

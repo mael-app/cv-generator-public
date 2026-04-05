@@ -41,7 +41,7 @@ async function checkApi() {
   }
 }
 
-(async () => {
+async function main(templateName) {
   console.log("Checking if API is running...");
   const apiRunning = await checkApi();
   if (!apiRunning) {
@@ -50,9 +50,7 @@ async function checkApi() {
     );
     process.exit(1);
   }
-})();
 
-async function main(templateName) {
   if (!fs.existsSync("./public/templates")) {
     fs.mkdirSync("./public/templates", { recursive: true });
   }

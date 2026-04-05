@@ -61,8 +61,12 @@ export function useCVStore() {
       DEFAULT_SETTINGS,
     );
     const savedPhoto = getLocalStorage<string>("cv-photo-preview", "");
+    const migratedSettings: CVSettings = {
+      ...DEFAULT_SETTINGS,
+      ...savedSettings,
+    };
     setCVInternal(savedCV);
-    setSettingsInternal(savedSettings);
+    setSettingsInternal(migratedSettings);
     setPhotoPreviewInternal(savedPhoto);
     setHydrated(true);
   }, []);

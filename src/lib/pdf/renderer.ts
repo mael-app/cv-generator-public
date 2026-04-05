@@ -3,8 +3,22 @@ import path from "path";
 import { CVData } from "@/lib/schemas/cv.schema";
 import { getInlinedFontStyle } from "./font-inliner";
 import logger from "@/lib/logger";
+import fs from "fs";
 
 export type CVLanguage = "fr" | "en";
+
+export const CV_TEMPLATES = [
+  "modern",
+  "classic",
+  "simple",
+  "executive",
+  "timeline",
+  "minimal",
+  "split",
+  "focus",
+  "slate",
+  "onepage",
+] as const;
 
 const CV_LABELS: Record<CVLanguage, Record<string, string>> = {
   fr: {
@@ -25,17 +39,13 @@ const CV_LABELS: Record<CVLanguage, Record<string, string>> = {
   },
 };
 
-export type CvTemplate =
-  | "modern"
-  | "classic"
-  | "simple"
-  | "executive"
-  | "timeline"
-  | "minimal"
-  | "split"
-  | "focus"
-  | "slate"
-  | "onepage";
+export type CvTemplate = (typeof CV_TEMPLATES)[number];
+
+export function isCvTemplate(value: unknown): value is CvTemplate {
+  return (
+    typeof value === "string" && CV_TEMPLATES.includes(value as CvTemplate)
+  );
+}
 
 interface RenderOptions {
   cv: CVData;
@@ -107,7 +117,23 @@ export async function renderCV({
 
   const cvTemplateFile = `${cvTemplate}.ejs`;
 
+  // Security check: ensure the template file exists and is within the expected directory
   const templatePath = path.join(process.cwd(), `src/views/${cvTemplateFile}`);
+  if (!fs.existsSync(templatePath)) {
+    logger.error({ templatePath }, "CV template file not found");
+    throw new Error("CV template not found");
+  }
+
+  const resolvedPath = path.resolve(templatePath);
+  const viewsDir = path.resolve(process.cwd(), "src/views");
+  if (!resolvedPath.startsWith(viewsDir)) {
+    logger.error(
+      { templatePath },
+      "CV template path traversal attempt detected",
+    );
+    throw new Error("Invalid CV template path");
+  }
+
   let htmlContent = (await ejs.renderFile(templatePath, viewData)) as string;
 
   // Replace Google Fonts <link> with inlined @font-face (woff2 as base64)
