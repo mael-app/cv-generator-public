@@ -26,6 +26,7 @@ import {
 import { ColorPreview } from "./ColorPreview";
 import { CvTemplate } from "@/lib/pdf/renderer";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 interface Props {
   settings: CVSettings;
@@ -46,7 +47,7 @@ function TemplateThumbnail({
         className,
       )}
     >
-      <img
+      <Image
         src={`/templates/${template}.png`}
         alt={`Preview of ${template} template`}
         className="w-full h-full object-cover object-top"
