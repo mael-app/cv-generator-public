@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: <%= mainColor %>;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --line: #dbe1ea;
+      --paper: #ffffff;
+      --soft: #f4f6fb;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Archivo', sans-serif;
+      background: #e9edf4;
+      color: var(--ink);
+      font-size: 11px;
+      line-height: 1.4;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto;
+      background: var(--paper);
+      display: flex;
+      flex-direction: column;
+      border-top: 7px solid var(--primary);
+    }
+
+    header {
+      padding: 11mm 14mm;
+      background: linear-gradient(180deg, var(--soft), var(--paper));
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 44px;
+      letter-spacing: 1.4px;
+      line-height: 0.95;
+      color: #111827;
+      margin-bottom: 2px;
+    }
+
+    .title {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+
+    .goal {
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .contact {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .contact span,
+    .contact a {
+      color: var(--muted);
+      text-decoration: none;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 2px 7px;
+      background: #fff;
+      font-size: 10px;
+    }
+
+    .photo {
+      width: 86px;
+      height: 86px;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 2px solid var(--primary);
+    }
+
+    .main-content {
+      display: flex;
+      flex: 1;
+    }
+
+    .col-left {
+      width: 35%;
+      background: var(--soft);
+      padding: 10mm;
+      border-right: 1px solid var(--line);
+    }
+
+    .col-right {
+      width: 65%;
+      padding: 10mm;
+    }
+
+    h2 {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1.4px;
+      color: #111827;
+      margin-bottom: 8px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 3px;
+    }
+
+    .section-wrap { margin-bottom: 14px; }
+
+    .pill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 5px;
+    }
+
+    .pill {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 10px;
+      color: #374151;
+      background: #fff;
+    }
+
+    .lang-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+      font-size: 11px;
+      color: #374151;
+    }
+
+    .lang-level {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .entry {
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed var(--line);
+    }
+
+    .entry:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .entry-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 2px;
+    }
+
+    .entry-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .entry-date {
+      font-size: 10px;
+      color: var(--muted);
+      white-space: nowrap;
+      font-weight: 600;
+    }
+
+    .entry-subtitle {
+      color: var(--primary);
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+
+    .entry-desc {
+      color: #4b5563;
+      margin-bottom: 3px;
+    }
+
+    ul {
+      margin-left: 14px;
+      color: #4b5563;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <header>
+      <div>
+        <h1><%= header.name %></h1>
+        <div class="title"><%= header.title %></div>
+        <% if (header.jobSearchGoal) { %><p class="goal"><%= header.jobSearchGoal %></p><% } %>
+        <div class="contact">
+          <% if (header.age) { %><span>Age: <%= header.age %></span><% } %>
+          <% if (header.contact.email) { %><a href="mailto:<%= header.contact.email %>"><%= header.contact.email %></a><% } %>
+          <% if (header.contact.phone) { %><span><%= header.contact.phone %></span><% } %>
+          <% if (header.contact.location) { %><span><%= header.contact.location %></span><% } %>
+          <% if (header.contact.linkedinLabel) { %><a href="<%= header.contact.linkedinUrl %>" target="_blank" rel="noopener noreferrer"><%= header.contact.linkedinLabel %></a><% } %>
+          <% if (header.contact.githubLabel) { %><a href="<%= header.contact.githubUrl %>" target="_blank" rel="noopener noreferrer"><%= header.contact.githubLabel %></a><% } %>
+        </div>
+      </div>
+      <% if (header.pictureBase64) { %><img src="<%= header.pictureBase64 %>" class="photo" alt="Photo de profil" /><% } %>
+    </header>
+
+    <div class="main-content">
+      <div class="col-left">
+        <% if (skills && skills.length > 0) { %>
+        <div class="section-wrap">
+          <h2><%= labels.hardSkills || "Expertise" %></h2>
+          <div class="pill-list">
+            <% skills.forEach(function(skill) { %><span class="pill"><%= skill %></span><% }); %>
+          </div>
+        </div>
+        <% } %>
+
+        <% if (softSkills && softSkills.length > 0) { %>
+        <div class="section-wrap">
+          <h2><%= labels.softSkills || "Soft Skills" %></h2>
+          <div class="pill-list">
+            <% softSkills.forEach(function(skill) { %><span class="pill"><%= skill %></span><% }); %>
+          </div>
+        </div>
+        <% } %>
+
+        <% if (languages && languages.length > 0) { %>
+        <div class="section-wrap">
+          <h2><%= labels.languages || "Languages" %></h2>
+          <% languages.forEach(function(lang) { %>
+          <div class="lang-item"><span><%= lang.name %></span><span class="lang-level"><%= lang.level %></span></div>
+          <% }); %>
+        </div>
+        <% } %>
+      </div>
+
+      <div class="col-right">
+        <% if (experiences && experiences.length > 0) { %>
+        <div class="section-wrap">
+          <h2><%= labels.experiences || "Experience" %></h2>
+          <% experiences.forEach(function(exp) { %>
+          <article class="entry">
+            <div class="entry-head">
+              <span class="entry-title"><%= exp.role %></span>
+              <span class="entry-date"><%= exp.date %></span>
+            </div>
+            <div class="entry-subtitle"><%= exp.company %></div>
+            <% if (exp.description) { %><p class="entry-desc"><%= exp.description %></p><% } %>
+            <% if (exp.tasks && exp.tasks.length > 0) { %>
+            <ul>
+              <% exp.tasks.forEach(function(task) { %><li><%= task %></li><% }); %>
+            </ul>
+            <% } %>
+          </article>
+          <% }); %>
+        </div>
+        <% } %>
+
+        <% if (projects && projects.length > 0) { %>
+        <div class="section-wrap">
+          <h2><%= labels.projects || "Projects" %></h2>
+          <% projects.forEach(function(project) { %>
+          <article class="entry">
+            <div class="entry-head">
+              <span class="entry-title"><%= project.title %></span>
+              <% if (project.stack) { %><span class="entry-date"><%= project.stack %></span><% } %>
+            </div>
+            <% if (project.description) { %><p class="entry-desc"><%= project.description %></p><% } %>
+          </article>
+          <% }); %>
+        </div>
+        <% } %>
+
+        <% if (education && education.length > 0) { %>
+        <div class="section-wrap">
+          <h2><%= labels.education || "Education" %></h2>
+          <% education.forEach(function(edu) { %>
+          <article class="entry">
+            <div class="entry-head">
+              <span class="entry-title"><%= edu.degree %></span>
+              <span class="entry-date"><%= edu.date %></span>
+            </div>
+            <div class="entry-subtitle"><%= edu.school %></div>
+            <% if (edu.details) { %><p class="entry-desc"><%= edu.details %></p><% } %>
+          </article>
+          <% }); %>
+        </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

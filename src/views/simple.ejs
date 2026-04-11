@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: <%=mainColor %>;
+            --text-dark: #1f2937;
+            --text-gray: #4b5563;
+            --text-light: #6b7280;
+            --line-color: #d1d5db;
+            --bg-body: #fcfcfd;
+            --footer-bg: #374151;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            color: var(--text-gray);
+            background: #e5e7eb;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+            font-size: 13px;
+            line-height: 1.55;
+        }
+
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            background: var(--bg-body);
+            position: relative;
+            padding: 40px 54px 62px 54px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        header {
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--line-color);
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 14px;
+            align-items: center;
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 31px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.8px;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary);
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            margin-bottom: 7px;
+        }
+
+        .goal {
+            color: var(--text-gray);
+            margin-bottom: 7px;
+            max-width: 92%;
+        }
+
+        .photo {
+            width: 84px;
+            height: 84px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+        }
+
+        .contact-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            font-size: 10px;
+            color: var(--text-light);
+        }
+
+        .contact-item {
+            border: 1px solid var(--line-color);
+            border-radius: 999px;
+            padding: 2px 8px;
+            background: #ffffff;
+        }
+
+        section {
+            margin-bottom: 16px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--line-color);
+        }
+
+        section:last-of-type {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.4px;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .item-block {
+            margin-bottom: 11px;
+        }
+
+        .item-block:last-child {
+            margin-bottom: 0;
+        }
+
+        .item-meta {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-bottom: 2px;
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .item-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 3px;
+        }
+
+        .description,
+        .about-text {
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+
+        ul {
+            margin-left: 15px;
+        }
+
+        li {
+            margin-bottom: 2px;
+            color: var(--text-gray);
+        }
+
+        .skills-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .skills-grid li {
+            font-size: 10px;
+            color: #1f2937;
+            background-color: #eef2f7;
+            border: 1px solid var(--line-color);
+            padding: 3px 9px;
+            border-radius: 999px;
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+
+        .dual {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .footer-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 18px;
+            background: linear-gradient(90deg, var(--footer-bg), var(--primary));
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+        <header>
+            <div>
+                <h1><%= header.name %></h1>
+                <div class="subtitle"><%= header.title %></div>
+                <% if (header.jobSearchGoal) { %><p class="goal"><%= header.jobSearchGoal %></p><% } %>
+                <div class="contact-info">
+                    <% if (header.age) { %><span class="contact-item">Age: <%= header.age %></span><% } %>
+                    <% if (header.contact.phone) { %><span class="contact-item"><%= header.contact.phone %></span><% } %>
+                    <% if (header.contact.email) { %><a class="contact-item" href="mailto:<%= header.contact.email %>"><%= header.contact.email %></a><% } %>
+                    <% if (header.contact.location) { %><span class="contact-item"><%= header.contact.location %></span><% } %>
+                    <% if (header.contact.linkedinLabel) { %><a class="contact-item" href="<%= header.contact.linkedinUrl %>" target="_blank" rel="noopener noreferrer"><%= header.contact.linkedinLabel %></a><% } %>
+                    <% if (header.contact.githubLabel) { %><a class="contact-item" href="<%= header.contact.githubUrl %>" target="_blank" rel="noopener noreferrer"><%= header.contact.githubLabel %></a><% } %>
+                </div>
+            </div>
+            <% if (header.pictureBase64) { %><img src="<%= header.pictureBase64 %>" class="photo" alt="Photo de profil" /><% } %>
+        </header>
+
+        <% if (experiences && experiences.length > 0) { %>
+        <section>
+            <h2><%= labels.experiences || "WORK EXPERIENCE" %></h2>
+            <% experiences.forEach(function(exp) { %>
+            <div class="item-block">
+                <div class="item-meta"><span><%= exp.company %></span><span><%= exp.date %></span></div>
+                <div class="item-title"><%= exp.role %></div>
+                <% if (exp.description) { %><p class="description"><%= exp.description %></p><% } %>
+                <% if (exp.tasks && exp.tasks.length > 0) { %>
+                <ul>
+                    <% exp.tasks.forEach(function(task) { %><li><%= task %></li><% }); %>
+                </ul>
+                <% } %>
+            </div>
+            <% }); %>
+        </section>
+        <% } %>
+
+        <% if (projects && projects.length > 0) { %>
+        <section>
+            <h2><%= labels.projects || "PROJECTS" %></h2>
+            <% projects.forEach(function(project) { %>
+            <div class="item-block">
+                <div class="item-meta"><span><%= project.title %></span><span><%= project.stack %></span></div>
+                <% if (project.description) { %><p class="description"><%= project.description %></p><% } %>
+            </div>
+            <% }); %>
+        </section>
+        <% } %>
+
+        <div class="dual">
+            <% if (education && education.length > 0) { %>
+            <section>
+                <h2><%= labels.education || "EDUCATION" %></h2>
+                <% education.forEach(function(edu) { %>
+                <div class="item-block">
+                    <div class="item-meta"><span><%= edu.school %></span><span><%= edu.date %></span></div>
+                    <div class="item-title"><%= edu.degree %></div>
+                    <% if (edu.details) { %><p class="description"><%= edu.details %></p><% } %>
+                </div>
+                <% }); %>
+            </section>
+            <% } %>
+
+            <section>
+                <% if (skills && skills.length > 0) { %>
+                <h2><%= labels.hardSkills || "SKILLS" %></h2>
+                <ul class="skills-grid" style="margin-bottom: 10px;">
+                    <% skills.forEach(function(skill) { %><li><%= skill %></li><% }); %>
+                </ul>
+                <% } %>
+
+                <% if (softSkills && softSkills.length > 0) { %>
+                <h2><%= labels.softSkills || "SOFT SKILLS" %></h2>
+                <ul class="skills-grid" style="margin-bottom: 10px;">
+                    <% softSkills.forEach(function(skill) { %><li><%= skill %></li><% }); %>
+                </ul>
+                <% } %>
+
+                <% if (languages && languages.length > 0) { %>
+                <h2><%= labels.languages || "LANGUAGES" %></h2>
+                <% languages.forEach(function(lang) { %>
+                <div class="item-meta"><span><%= lang.name %></span><span><%= lang.level %></span></div>
+                <% }); %>
+                <% } %>
+            </section>
+        </div>
+        <div class="footer-bar"></div>
+    </div>
+</body>
+
+</html>

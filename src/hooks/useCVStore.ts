@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { CVData } from "@/lib/schemas/cv.schema";
 import { getLocalStorage, setLocalStorage } from "@/lib/storage/local-storage";
 
-import type { CVLanguage } from "@/lib/pdf/renderer";
+import type { CVLanguage, CvTemplate } from "@/lib/pdf/renderer";
 export type { CVLanguage };
 
 export interface CVSettings {
@@ -12,6 +12,7 @@ export interface CVSettings {
   color: string;
   theme: "light" | "dark";
   cvLanguage: CVLanguage | "auto"; // "auto" = follow UI language
+  cvTemplate: CvTemplate;
 }
 
 const DEFAULT_CV: CVData = {
@@ -41,6 +42,7 @@ const DEFAULT_SETTINGS: CVSettings = {
   color: "",
   theme: "light",
   cvLanguage: "auto",
+  cvTemplate: "modern",
 };
 
 export function useCVStore() {
@@ -59,8 +61,12 @@ export function useCVStore() {
       DEFAULT_SETTINGS,
     );
     const savedPhoto = getLocalStorage<string>("cv-photo-preview", "");
+    const migratedSettings: CVSettings = {
+      ...DEFAULT_SETTINGS,
+      ...savedSettings,
+    };
     setCVInternal(savedCV);
-    setSettingsInternal(savedSettings);
+    setSettingsInternal(migratedSettings);
     setPhotoPreviewInternal(savedPhoto);
     setHydrated(true);
   }, []);
