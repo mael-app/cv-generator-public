@@ -131,6 +131,17 @@ describe("buildCVHtml", () => {
     expect(getErrorStatus(result)).toBe(413);
   });
 
+  it("returns a 413 error response when the photo base64 string is too large", async () => {
+    const largeDataUrl = `data:image/jpeg;base64,${"A".repeat(
+      Math.ceil(MAX_PHOTO_SIZE * 1.37) + 1,
+    )}`;
+    const result = await buildCVHtml(
+      makeFormData({ photo: largeDataUrl }),
+      false,
+    );
+    expect(getErrorStatus(result)).toBe(413);
+  });
+
   it("returns a 400 error response when cvTemplate is invalid", async () => {
     const result = await buildCVHtml(
       makeFormData({ cvTemplate: "../../secret-template" }),

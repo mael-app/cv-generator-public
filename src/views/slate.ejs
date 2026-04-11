@@ -280,8 +280,8 @@
             <% if (header.contact.location) { %><span><%= header.contact.location %></span><% } %>
             <% if (header.contact.phone) { %><span><%= header.contact.phone %></span><% } %>
             <% if (header.contact.email) { %><a href="mailto:<%= header.contact.email %>"><%= header.contact.email %></a><% } %>
-            <% if (header.contact.linkedinLabel) { %><a href="<%= header.contact.linkedinUrl %>" target="_blank"><%= header.contact.linkedinLabel %></a><% } %>
-            <% if (header.contact.githubLabel) { %><a href="<%= header.contact.githubUrl %>" target="_blank"><%= header.contact.githubLabel %></a><% } %>
+            <% if (header.contact.linkedinLabel) { %><a href="<%= header.contact.linkedinUrl %>" target="_blank" rel="noopener noreferrer"><%= header.contact.linkedinLabel %></a><% } %>
+            <% if (header.contact.githubLabel) { %><a href="<%= header.contact.githubUrl %>" target="_blank" rel="noopener noreferrer"><%= header.contact.githubLabel %></a><% } %>
           </div>
         </div>
         <% if (header.pictureBase64) { %>

@@ -244,8 +244,8 @@
                     <% if (header.contact.location) { %><span><%= header.contact.location %></span><% } %>
                     <% if (header.contact.phone) { %><span><%= header.contact.phone %></span><% } %>
                     <% if (header.contact.email) { %><span><a href="mailto:<%= header.contact.email %>"><%= header.contact.email %></a></span><% } %>
-                    <% if (header.contact.linkedinLabel) { %><span><a href="<%= header.contact.linkedinUrl %>" target="_blank"><%= header.contact.linkedinLabel %></a></span><% } %>
-                    <% if (header.contact.githubLabel) { %><span><a href="<%= header.contact.githubUrl %>" target="_blank"><%= header.contact.githubLabel %></a></span><% } %>
+                    <% if (header.contact.linkedinLabel) { %><span><a href="<%= header.contact.linkedinUrl %>" target="_blank" rel="noopener noreferrer"><%= header.contact.linkedinLabel %></a></span><% } %>
+                    <% if (header.contact.githubLabel) { %><span><a href="<%= header.contact.githubUrl %>" target="_blank" rel="noopener noreferrer"><%= header.contact.githubLabel %></a></span><% } %>
                 </div>
             </div>
             <% if (header.pictureBase64) { %>

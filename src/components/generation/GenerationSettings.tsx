@@ -24,7 +24,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ColorPreview } from "./ColorPreview";
-import { CvTemplate } from "@/lib/pdf/renderer";
+import type { CvTemplate } from "@/lib/pdf/renderer";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 

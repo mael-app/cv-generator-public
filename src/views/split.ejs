@@ -231,8 +231,8 @@
         <% if (header.contact.email) { %><a class="contact-item" href="mailto:<%= header.contact.email %>"><%= header.contact.email %></a><% } %>
         <% if (header.contact.phone) { %><div class="contact-item"><%= header.contact.phone %></div><% } %>
         <% if (header.contact.location) { %><div class="contact-item"><%= header.contact.location %></div><% } %>
-        <% if (header.contact.linkedinLabel) { %><a class="contact-item" href="<%= header.contact.linkedinUrl %>" target="_blank"><%= header.contact.linkedinLabel %></a><% } %>
-        <% if (header.contact.githubLabel) { %><a class="contact-item" href="<%= header.contact.githubUrl %>" target="_blank"><%= header.contact.githubLabel %></a><% } %>
+        <% if (header.contact.linkedinLabel) { %><a class="contact-item" href="<%= header.contact.linkedinUrl %>" target="_blank" rel="noopener noreferrer"><%= header.contact.linkedinLabel %></a><% } %>
+        <% if (header.contact.githubLabel) { %><a class="contact-item" href="<%= header.contact.githubUrl %>" target="_blank" rel="noopener noreferrer"><%= header.contact.githubLabel %></a><% } %>
       </div>
 
       <% if (skills && skills.length > 0) { %>

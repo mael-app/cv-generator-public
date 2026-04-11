@@ -36,7 +36,7 @@ async function checkApi() {
       `API responded with status ${res.status}. It might be running but not responding correctly.`,
     );
     return false;
-  } catch (err) {
+  } catch {
     return false;
   }
 }
@@ -56,6 +56,7 @@ async function main(templateName) {
   }
 
   const browser = await puppeteer.launch({ headless: true });
+  const failedTemplates = [];
 
   async function processTemplate(template) {
     console.log(`Generating preview for ${template}...`);
@@ -76,6 +77,7 @@ async function main(templateName) {
         `Failed to fetch preview for ${template}`,
         await res.text(),
       );
+      failedTemplates.push(template);
       return;
     }
 
@@ -103,6 +105,12 @@ async function main(templateName) {
   }
 
   await browser.close();
+
+  if (failedTemplates.length > 0) {
+    throw new Error(
+      `Preview generation failed for: ${failedTemplates.join(", ")}`,
+    );
+  }
 }
 
 const templateName = process.argv[2];

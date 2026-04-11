@@ -214,8 +214,8 @@
                     <% if (header.contact.phone) { %><span class="contact-item"><%= header.contact.phone %></span><% } %>
                     <% if (header.contact.email) { %><a class="contact-item" href="mailto:<%= header.contact.email %>"><%= header.contact.email %></a><% } %>
                     <% if (header.contact.location) { %><span class="contact-item"><%= header.contact.location %></span><% } %>
-                    <% if (header.contact.linkedinLabel) { %><a class="contact-item" href="<%= header.contact.linkedinUrl %>" target="_blank"><%= header.contact.linkedinLabel %></a><% } %>
-                    <% if (header.contact.githubLabel) { %><a class="contact-item" href="<%= header.contact.githubUrl %>" target="_blank"><%= header.contact.githubLabel %></a><% } %>
+                    <% if (header.contact.linkedinLabel) { %><a class="contact-item" href="<%= header.contact.linkedinUrl %>" target="_blank" rel="noopener noreferrer"><%= header.contact.linkedinLabel %></a><% } %>
+                    <% if (header.contact.githubLabel) { %><a class="contact-item" href="<%= header.contact.githubUrl %>" target="_blank" rel="noopener noreferrer"><%= header.contact.githubLabel %></a><% } %>
                 </div>
             </div>
             <% if (header.pictureBase64) { %><img src="<%= header.pictureBase64 %>" class="photo" alt="Photo de profil" /><% } %>
