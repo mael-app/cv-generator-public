@@ -11,8 +11,9 @@ WORKDIR /app
 
 COPY --chown=pptruser:pptruser package*.json ./
 
-# HUSKY=0 — no .git dir in Docker, skip husky install
-RUN HUSKY=0 npm ci
+# --ignore-scripts: no .git dir in Docker (skips husky) and the browser comes
+# from the base image / @sparticuz/chromium, so postinstall downloads are unneeded.
+RUN npm ci --ignore-scripts
 
 COPY --chown=pptruser:pptruser . .
 
