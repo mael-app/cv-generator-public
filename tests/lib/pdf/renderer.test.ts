@@ -1,4 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { readdirSync } from "node:fs";
+import path from "node:path";
 import { CVData } from "@/lib/schemas/cv.schema";
 
 // Mock font inliner to avoid real network calls
@@ -50,6 +52,19 @@ async function render(cv: CVData, photoBase64?: string): Promise<string> {
     theme: "light",
     cvLanguage: "en",
     inlineFonts: false,
+  });
+}
+
+async function renderWithTemplate(
+  template: Parameters<typeof renderCV>[0]["cvTemplate"],
+) {
+  return renderCV({
+    cv: fullCV,
+    color: "005eb8",
+    theme: "light",
+    cvLanguage: "en",
+    inlineFonts: false,
+    cvTemplate: template,
   });
 }
 
@@ -276,5 +291,38 @@ describe("renderCV — GitHub/LinkedIn URL formatting", () => {
     const html = await render(cv);
     expect(html).not.toContain("M9 18c-4.51 2-5-2-7-2"); // GitHub SVG path
     expect(html).not.toContain('rect width="4" height="12"'); // LinkedIn SVG rect
+  });
+});
+
+describe("renderCV — template variants", () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  it("has a generated preview image for every template view", () => {
+    const viewsDir = path.resolve(process.cwd(), "src/views");
+    const previewsDir = path.resolve(process.cwd(), "public/templates");
+
+    const viewTemplates = readdirSync(viewsDir)
+      .filter((fileName) => fileName.endsWith(".ejs"))
+      .map((fileName) => fileName.replace(/\.ejs$/, ""))
+      .sort();
+
+    const previewTemplates = readdirSync(previewsDir)
+      .filter((fileName) => fileName.endsWith(".png"))
+      .map((fileName) => fileName.replace(/\.png$/, ""))
+      .sort();
+
+    expect(previewTemplates).toEqual(viewTemplates);
+  });
+
+  it("renders the executive template markup", async () => {
+    const html = await renderWithTemplate("executive");
+    expect(html).toContain('class="sidebar"');
+    expect(html).toContain('class="chip-wrap"');
+  });
+
+  it("renders the timeline template markup", async () => {
+    const html = await renderWithTemplate("timeline");
+    expect(html).toContain('class="timeline"');
+    expect(html).toContain('class="hero"');
   });
 });

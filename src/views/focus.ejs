@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: <%= mainColor %>;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --bg: #ffffff;
+      --line: #e5e7eb;
+      --soft: #f9fafb;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Manrope', sans-serif;
+      background: #eef2f7;
+      color: var(--text);
+      font-size: 12px;
+      line-height: 1.48;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto;
+      background: var(--bg);
+      padding: 16mm 18mm;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    }
+
+    .header {
+      border-bottom: 2px solid var(--line);
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: center;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 44px;
+      line-height: 0.9;
+      color: #111827;
+      margin-bottom: 4px;
+      letter-spacing: 0.3px;
+    }
+
+    .role {
+      color: var(--primary);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.7px;
+      margin-bottom: 6px;
+      font-size: 11px;
+    }
+
+    .goal {
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .meta span,
+    .meta a {
+      color: var(--muted);
+      text-decoration: none;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 2px 7px;
+      background: var(--soft);
+      font-size: 10px;
+    }
+
+    .photo {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--primary);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 12px;
+    }
+
+    .section {
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 23px;
+      color: #111827;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 6px;
+      padding-bottom: 2px;
+    }
+
+    .item {
+      margin-bottom: 8px;
+      padding-bottom: 7px;
+      border-bottom: 1px dashed var(--line);
+    }
+
+    .item:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 2px;
+    }
+
+    .item-title {
+      font-weight: 700;
+      color: #111827;
+      font-size: 13px;
+    }
+
+    .item-date {
+      color: var(--muted);
+      font-size: 10px;
+      white-space: nowrap;
+      font-weight: 600;
+    }
+
+    .item-subtitle {
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 11px;
+      margin-bottom: 3px;
+    }
+
+    .item-desc {
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+
+    ul {
+      margin-left: 14px;
+      color: var(--muted);
+    }
+
+    .skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .skill {
+      border: 1px solid var(--line);
+      background: var(--soft);
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 10px;
+    }
+
+    .lang-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .lang-item strong {
+      color: var(--primary);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <header class="header">
+      <div>
+        <h1><%= header.name %></h1>
+        <div class="role"><%= header.title %></div>
+        <% if (header.jobSearchGoal) { %><p class="goal"><%= header.jobSearchGoal %></p><% } %>
+        <div class="meta">
+          <% if (header.age) { %><span>Age: <%= header.age %></span><% } %>
+          <% if (header.contact.email) { %><a href="mailto:<%= header.contact.email %>"><%= header.contact.email %></a><% } %>
+          <% if (header.contact.phone) { %><span><%= header.contact.phone %></span><% } %>
+          <% if (header.contact.location) { %><span><%= header.contact.location %></span><% } %>
+          <% if (header.contact.linkedinLabel) { %><a href="<%= header.contact.linkedinUrl %>" target="_blank" rel="noopener noreferrer"><%= header.contact.linkedinLabel %></a><% } %>
+          <% if (header.contact.githubLabel) { %><a href="<%= header.contact.githubUrl %>" target="_blank" rel="noopener noreferrer"><%= header.contact.githubLabel %></a><% } %>
+        </div>
+      </div>
+      <% if (header.pictureBase64) { %><img src="<%= header.pictureBase64 %>" class="photo" alt="Photo de profil" /><% } %>
+    </header>
+
+    <div class="layout">
+      <main>
+        <% if (experiences && experiences.length > 0) { %>
+        <section class="section">
+          <h2><%= labels.experiences || "Experience" %></h2>
+          <% experiences.forEach(function(exp) { %>
+          <article class="item">
+            <div class="item-header">
+              <span class="item-title"><%= exp.role %></span>
+              <span class="item-date"><%= exp.date %></span>
+            </div>
+            <div class="item-subtitle"><%= exp.company %></div>
+            <% if (exp.description) { %><p class="item-desc"><%= exp.description %></p><% } %>
+            <% if (exp.tasks && exp.tasks.length > 0) { %>
+            <ul>
+              <% exp.tasks.forEach(function(task) { %><li><%= task %></li><% }); %>
+            </ul>
+            <% } %>
+          </article>
+          <% }); %>
+        </section>
+        <% } %>
+
+        <% if (projects && projects.length > 0) { %>
+        <section class="section">
+          <h2><%= labels.projects || "Projects" %></h2>
+          <% projects.forEach(function(project) { %>
+          <article class="item">
+            <div class="item-header">
+              <span class="item-title"><%= project.title %></span>
+              <% if (project.stack) { %><span class="item-date"><%= project.stack %></span><% } %>
+            </div>
+            <% if (project.description) { %><p class="item-desc"><%= project.description %></p><% } %>
+          </article>
+          <% }); %>
+        </section>
+        <% } %>
+
+        <% if (education && education.length > 0) { %>
+        <section class="section">
+          <h2><%= labels.education || "Education" %></h2>
+          <% education.forEach(function(edu) { %>
+          <article class="item">
+            <div class="item-header">
+              <span class="item-title"><%= edu.degree %></span>
+              <span class="item-date"><%= edu.date %></span>
+            </div>
+            <div class="item-subtitle"><%= edu.school %></div>
+            <% if (edu.details) { %><p class="item-desc"><%= edu.details %></p><% } %>
+          </article>
+          <% }); %>
+        </section>
+        <% } %>
+      </main>
+
+      <aside>
+        <% if (skills && skills.length > 0) { %>
+        <section class="section">
+          <h2><%= labels.hardSkills || "Professional" %></h2>
+          <div class="skills">
+            <% skills.forEach(function(skill) { %><span class="skill"><%= skill %></span><% }); %>
+          </div>
+        </section>
+        <% } %>
+
+        <% if (softSkills && softSkills.length > 0) { %>
+        <section class="section">
+          <h2><%= labels.softSkills || "Personal" %></h2>
+          <div class="skills">
+            <% softSkills.forEach(function(skill) { %><span class="skill"><%= skill %></span><% }); %>
+          </div>
+        </section>
+        <% } %>
+
+        <% if (languages && languages.length > 0) { %>
+        <section class="section">
+          <h2><%= labels.languages || "Languages" %></h2>
+          <% languages.forEach(function(lang) { %>
+          <div class="lang-item"><span><%= lang.name %></span><strong><%= lang.level %></strong></div>
+          <% }); %>
+        </section>
+        <% } %>
+      </aside>
+    </div>
+  </div>
+</body>
+
+</html>

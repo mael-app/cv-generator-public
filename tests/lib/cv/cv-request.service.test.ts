@@ -12,6 +12,19 @@ vi.mock("next/server", () => ({
 
 vi.mock("@/lib/pdf/renderer", () => ({
   renderCV: vi.fn().mockResolvedValue("<html>CV</html>"),
+  isCvTemplate: (value: unknown) =>
+    [
+      "modern",
+      "classic",
+      "simple",
+      "executive",
+      "timeline",
+      "minimal",
+      "split",
+      "focus",
+      "slate",
+      "onepage",
+    ].includes(value as string),
 }));
 
 vi.mock("@/lib/color/color.service", () => ({
@@ -116,6 +129,26 @@ describe("buildCVHtml", () => {
     fd.append("photo", file);
     const result = await buildCVHtml(fd, false);
     expect(getErrorStatus(result)).toBe(413);
+  });
+
+  it("returns a 413 error response when the photo base64 string is too large", async () => {
+    const largeDataUrl = `data:image/jpeg;base64,${"A".repeat(
+      Math.ceil(MAX_PHOTO_SIZE * 1.37) + 1,
+    )}`;
+    const result = await buildCVHtml(
+      makeFormData({ photo: largeDataUrl }),
+      false,
+    );
+    expect(getErrorStatus(result)).toBe(413);
+  });
+
+  it("returns a 400 error response when cvTemplate is invalid", async () => {
+    const result = await buildCVHtml(
+      makeFormData({ cvTemplate: "../../secret-template" }),
+      false,
+    );
+    expect(getErrorStatus(result)).toBe(400);
+    expect(mockRenderCV).not.toHaveBeenCalled();
   });
 
   // ── Happy-path cases ──────────────────────────────────────────────────────
