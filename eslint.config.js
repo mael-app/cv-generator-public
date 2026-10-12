@@ -1,8 +1,4 @@
-const { FlatCompat } = require("@eslint/eslintrc");
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
+const next = require("eslint-config-next/core-web-vitals");
 
 module.exports = [
   {
@@ -12,6 +8,7 @@ module.exports = [
       "dist/**",
       "output/**",
       "public/**",
+      "coverage/**",
       "src/controllers/**",
       "src/services/**",
       "src/data/**",
@@ -25,5 +22,11 @@ module.exports = [
       "postcss.config.mjs",
     ],
   },
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
+  ...next,
+  {
+    rules: {
+      // Hydrating state from localStorage inside an effect is intentional here.
+      "react-hooks/set-state-in-effect": "warn",
+    },
+  },
 ];

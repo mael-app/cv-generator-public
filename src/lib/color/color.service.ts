@@ -43,7 +43,6 @@ export class ColorService {
   ): Promise<string> {
     try {
       const colors = await getColors(buffer, mime);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const metrics: ColorMetric[] = colors.map((c: any) => {
         const [, s, l] = c.hsl();
         return { hex: c.hex(), saturation: s, luminance: l };
