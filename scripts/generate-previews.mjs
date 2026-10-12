@@ -73,10 +73,7 @@ async function main(templateName) {
     });
 
     if (!res.ok) {
-      console.error(
-        `Failed to fetch preview for ${template}`,
-        await res.text(),
-      );
+      console.error(`Failed to fetch preview for ${template} (HTTP ${res.status})`);
       failedTemplates.push(template);
       return;
     }
