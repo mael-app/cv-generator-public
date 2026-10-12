@@ -8,27 +8,51 @@ updates:
       time: "09:00"
       timezone: "Europe/Paris"
     open-pull-requests-limit: 10
+    rebase-strategy: "auto"
     labels:
       - "dependencies"
       - "npm"
+    # Only minor/patch updates are grouped; majors always get their own PR
+    # so a breaking bump can never ride along inside a combined update.
     groups:
       radix-ui:
         patterns:
           - "@radix-ui/*"
+        update-types:
+          - "minor"
+          - "patch"
       vercel:
         patterns:
           - "@vercel/*"
+        update-types:
+          - "minor"
+          - "patch"
       testing:
         patterns:
           - "vitest"
           - "@vitest/*"
           - "@testing-library/*"
+        update-types:
+          - "minor"
+          - "patch"
       types:
         patterns:
           - "@types/*"
+        update-types:
+          - "minor"
+          - "patch"
       commitlint:
         patterns:
           - "@commitlint/*"
+        update-types:
+          - "minor"
+          - "patch"
+      minor-and-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
     ignore:
       - dependency-name: "next"
         update-types: [ "version-update:semver-major" ]
