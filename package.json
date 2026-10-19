@@ -46,7 +46,7 @@
     "@commitlint/cli": "^20.5.0",
     "@commitlint/config-conventional": "^20.5.0",
     "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.2",
+    "@testing-library/react": "^16.3.3",
     "@types/ejs": "^3.1.5",
     "@types/get-image-colors": "^4.0.5",
     "@types/node": "^25.5.2",
